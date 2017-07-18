@@ -1,4 +1,6 @@
+from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils.translation import ugettext_lazy as _
 
 
 DEBIT = 'debit'
@@ -40,10 +42,9 @@ class Amount(models.Model):
     amount = models.DecimalField(max_digits=13, decimal_places=2,
                                  help_text='Record debits as positive, credits as negative')
 
-    def save(self, *args, **kwargs):
+    def clean(self):
         if self.amount == 0:
-            raise Exception('ZeroAmount error')
-        return super(Amount, self).save(*args, **kwargs)
+            raise ValidationError({'amount': _("Amount must not be 0")})
 
     @property
     def type(self):
