@@ -31,6 +31,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'ledger.apps.LedgerConfig',
     'lots.apps.LotsConfig',
     'django.contrib.admin',
     'django.contrib.auth',
