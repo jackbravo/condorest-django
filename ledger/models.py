@@ -55,3 +55,6 @@ class Amount(models.Model):
             # This should have been caught earlier by the database integrity check.
             # If you are seeing this then something is wrong with your DB checks.
             raise Exception('ZeroAmount error')
+
+    def __str__(self):
+        return str(self.account) + ": " + str(self.amount)
