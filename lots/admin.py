@@ -1,7 +1,7 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
-from .models import Lot, Contact
+from .models import Lot, Contact, LotType
 
 
 class LotResource(resources.ModelResource):
@@ -35,5 +35,6 @@ class LotAdmin(ImportExportModelAdmin):
     resource_class = LotResource
 
 
+admin.site.register(LotType)
 admin.site.register(Lot, LotAdmin)
 admin.site.register(Contact, ContactAdmin)
