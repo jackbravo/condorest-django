@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'ledger.apps.LedgerConfig',
     'lots.apps.LotsConfig',
+    'revenue.apps.RevenueConfig',
+
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
