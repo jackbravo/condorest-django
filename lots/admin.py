@@ -14,24 +14,14 @@ class ContactResource(resources.ModelResource):
         model = Contact
 
 
-class ContactInline(admin.TabularInline):
-    model = Contact
-    fields = ['name', 'phone_number', 'is_owner']
-    extra = 2
-
-
 class ContactAdmin(ImportExportModelAdmin):
-    fields = ['name', 'phone_number', 'is_owner']
-    list_display = ('name', 'phone_number', 'is_owner')
-    list_filter = ['is_owner']
     search_fields = ['name']
     resource_class = ContactResource
 
 
 class LotAdmin(ImportExportModelAdmin):
-    inlines = [ContactInline]
-    list_display = ('code', 'address')
-    search_fields = ['code', 'address']
+    list_display = ('name', 'address')
+    search_fields = ['name', 'address']
     resource_class = LotResource
 
 
