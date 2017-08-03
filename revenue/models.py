@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 from ledger.models import Entry
 from lots.models import Contact, Lot
@@ -20,6 +21,6 @@ class Receipt(models.Model):
 class FeeLine(models.Model):
     receipt = models.ForeignKey(Receipt, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=13, decimal_places=2)
-    date_start = MonthField(db_index=True)
-    date_end = MonthField(db_index=True)
+    date_start = MonthField(db_index=True, default=timezone.now)
+    date_end = MonthField(db_index=True, default=timezone.now)
     lot = models.ForeignKey(Lot, on_delete=models.PROTECT)

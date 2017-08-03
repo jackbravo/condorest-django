@@ -40,6 +40,7 @@ class FeeLinesInline(admin.TabularInline):
 
 
 class ReceiptForm(forms.ModelForm):
+    # TODO: show asset field only if save_in_ledger is set
     save_in_ledger = forms.BooleanField(initial=True, required=False)
     asset = forms.ModelChoiceField(Account.objects.filter(type="asset"), label=_("Asset account"))
 
