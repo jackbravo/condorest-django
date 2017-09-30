@@ -58,3 +58,14 @@ class FeeLine(models.Model):
     date_start = MonthField(db_index=True, default=timezone.now)
     date_end = MonthField(db_index=True, default=timezone.now)
     lot = models.ForeignKey(Lot, on_delete=models.PROTECT)
+
+
+class FeePeriod(models.Model):
+    date = MonthField(db_index=True, default=timezone.now)
+    description = models.CharField(max_length=254, blank=True)
+
+
+class Fee(models.Model):
+    period = models.ForeignKey(FeePeriod, on_delete=models.CASCADE)
+    lot = models.ForeignKey(Lot, on_delete=models.PROTECT)
+    amount = models.DecimalField(max_digits=13, decimal_places=2)

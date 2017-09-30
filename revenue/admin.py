@@ -3,8 +3,7 @@ from django.core.exceptions import ValidationError
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from ledger.models import Entry, Account
-from revenue.models import Receipt, FeeLine
+from revenue.models import Receipt, FeeLine, FeePeriod, Fee
 
 
 class FeeLinesInlineFormSet(forms.BaseInlineFormSet):
@@ -46,3 +45,5 @@ class ReceiptAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Receipt, ReceiptAdmin)
+admin.site.register(FeePeriod)
+admin.site.register(Fee)
