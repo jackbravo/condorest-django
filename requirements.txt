@@ -1,3 +1,4 @@
 django-phonenumber-field
 django-import-export
 django-debug-toolbar
+psycopg2
