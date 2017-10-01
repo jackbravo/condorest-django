@@ -31,6 +31,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=200)),
                 ('address', models.CharField(blank=True, max_length=200)),
                 ('contacts', models.ManyToManyField(blank=True, to='lots.Contact')),
+                ('details', models.CharField(blank=True, max_length=254)),
             ],
         ),
         migrations.CreateModel(

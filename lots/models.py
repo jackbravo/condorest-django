@@ -24,6 +24,7 @@ class Lot(models.Model):
     lot_type = models.ForeignKey(LotType, on_delete=models.PROTECT)
     owner = models.ForeignKey(Contact, related_name='owns_lots', blank=True, null=True)
     contacts = models.ManyToManyField(Contact, blank=True)
+    details = models.CharField(max_length=254, blank=True)
 
     def __str__(self):
         return self.name
