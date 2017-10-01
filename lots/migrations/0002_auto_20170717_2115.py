@@ -4,12 +4,17 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 
+from lots.models import LotType
+
 
 def load_data(apps, schema_editor):
     LotType = apps.get_model("lots", "LotType")
 
     LotType(name="Casa").save()
     LotType(name="Lote").save()
+
+def remove_data(apps, schema_editor):
+    LotType.objects.all().delete()
 
 
 class Migration(migrations.Migration):
@@ -19,5 +24,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(load_data)
+        migrations.RunPython(load_data, remove_data)
     ]
