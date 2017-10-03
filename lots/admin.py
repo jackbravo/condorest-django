@@ -22,7 +22,7 @@ class ContactAdmin(ImportExportModelAdmin):
 
 
 class LotAdmin(ImportExportModelAdmin):
-    list_display = ['name', 'address', 'owner', 'lot_type']
+    list_display = ['name', 'address', 'owner', 'default_fee', 'lot_type']
     list_filter = ['lot_type']
     list_select_related = ['owner', 'lot_type']
     ordering = ['name']
