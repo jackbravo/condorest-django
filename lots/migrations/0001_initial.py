@@ -29,6 +29,7 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=200)),
                 ('address', models.CharField(blank=True, max_length=200)),
+                ('default_fee', models.DecimalField(default=100.00, decimal_places=2, max_digits=13)),
                 ('contacts', models.ManyToManyField(blank=True, to='lots.Contact')),
                 ('details', models.TextField(blank=True)),
             ],
