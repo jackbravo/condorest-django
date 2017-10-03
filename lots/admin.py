@@ -15,12 +15,17 @@ class ContactResource(resources.ModelResource):
 
 
 class ContactAdmin(ImportExportModelAdmin):
+    list_display = ['name', 'phone_number']
+    ordering = ['name']
     search_fields = ['name']
     resource_class = ContactResource
 
 
 class LotAdmin(ImportExportModelAdmin):
-    list_display = ('name', 'address')
+    list_display = ['name', 'address', 'owner', 'lot_type']
+    list_filter = ['lot_type']
+    list_select_related = ['owner', 'lot_type']
+    ordering = ['name']
     search_fields = ['name', 'address']
     resource_class = LotResource
 
