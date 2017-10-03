@@ -4,7 +4,6 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 import django.db.models.deletion
-import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
@@ -20,8 +19,8 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('name', models.CharField(max_length=200)),
-                ('phone_number', phonenumber_field.modelfields.PhoneNumberField(blank=True, max_length=128)),
-                ('details', models.CharField(blank=True, max_length=254)),
+                ('phone_number', models.CharField(blank=True, max_length=254)),
+                ('details', models.TextField(blank=True)),
             ],
         ),
         migrations.CreateModel(
@@ -31,7 +30,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(max_length=200)),
                 ('address', models.CharField(blank=True, max_length=200)),
                 ('contacts', models.ManyToManyField(blank=True, to='lots.Contact')),
-                ('details', models.CharField(blank=True, max_length=254)),
+                ('details', models.TextField(blank=True)),
             ],
         ),
         migrations.CreateModel(
