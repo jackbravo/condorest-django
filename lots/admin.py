@@ -36,6 +36,7 @@ class LotAdmin(ImportExportModelAdmin):
 
     class UpdateFeeForm(forms.Form):
         _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
+        select_across = forms.BooleanField(required=False, widget=forms.HiddenInput())
         fee = forms.DecimalField()
 
     def update_fee(self, request, queryset):
@@ -55,6 +56,7 @@ class LotAdmin(ImportExportModelAdmin):
         else:
             form = self.UpdateFeeForm(initial={
                 '_selected_action': request.POST.getlist(admin.ACTION_CHECKBOX_NAME),
+                'select_across': request.POST['select_across']
             })
 
         return render(request, 'admin/lots_update_fee.html', context={
