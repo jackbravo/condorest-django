@@ -1,0 +1,12 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form }}
+    <input type="hidden" name="action" value="update_fee" />
+    <input type="submit" name="update" value="Update fees" />
+    <p>The new fee will be applied to:</p>
+    <ul>{{ lots|unordered_list }}</ul>
+</form>
+{% endblock %}
