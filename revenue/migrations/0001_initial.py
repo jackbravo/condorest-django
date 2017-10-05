@@ -22,6 +22,7 @@ class Migration(migrations.Migration):
             name='Fee',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('date', month.models.MonthField(db_index=True, default=django.utils.timezone.now)),
                 ('amount', models.DecimalField(decimal_places=2, max_digits=13)),
                 ('lot', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='lots.Lot')),
             ],
@@ -30,18 +31,9 @@ class Migration(migrations.Migration):
             name='FeeLine',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.DecimalField(decimal_places=2, max_digits=13)),
-                ('date_start', month.models.MonthField(db_index=True, default=django.utils.timezone.now)),
-                ('date_end', month.models.MonthField(db_index=True, default=django.utils.timezone.now)),
-                ('lot', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='lots.Lot')),
-            ],
-        ),
-        migrations.CreateModel(
-            name='FeePeriod',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('date', month.models.MonthField(db_index=True, default=django.utils.timezone.now)),
-                ('description', models.CharField(blank=True, max_length=254)),
+                ('amount', models.DecimalField(decimal_places=2, max_digits=13)),
+                ('lot', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='lots.Lot')),
             ],
         ),
         migrations.CreateModel(
@@ -64,10 +56,5 @@ class Migration(migrations.Migration):
             model_name='feeline',
             name='receipt',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='revenue.Receipt'),
-        ),
-        migrations.AddField(
-            model_name='fee',
-            name='period',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='revenue.FeePeriod'),
         ),
     ]

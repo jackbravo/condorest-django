@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django import forms
 from django.utils.translation import ugettext_lazy as _
 
-from revenue.models import Receipt, FeeLine, FeePeriod, Fee
+from revenue.models import Receipt, FeeLine, Fee
 
 
 class FeeLinesInlineFormSet(forms.BaseInlineFormSet):
@@ -21,8 +21,7 @@ class FeeLinesInlineFormSet(forms.BaseInlineFormSet):
 
 class FeeLineForm(forms.ModelForm):
     def clean(self):
-        if self.cleaned_data['date_start'] > self.cleaned_data['date_end']:
-            raise ValidationError(_("Date start must be before date end"))
+        pass
 
 
 class FeeLinesInline(admin.TabularInline):
@@ -45,5 +44,4 @@ class ReceiptAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Receipt, ReceiptAdmin)
-admin.site.register(FeePeriod)
 admin.site.register(Fee)
