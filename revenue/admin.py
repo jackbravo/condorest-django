@@ -46,6 +46,7 @@ class ReceiptAdmin(admin.ModelAdmin):
 class FeeAdmin(admin.ModelAdmin):
     list_display = ['date', 'lot', 'amount']
     list_filter = ['date']
+    list_select_related = ['lot']
 
 
 admin.site.register(Receipt, ReceiptAdmin)

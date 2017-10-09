@@ -6,6 +6,9 @@ class Contact(models.Model):
     phone_number = models.CharField(max_length=254, blank=True)
     details = models.TextField(blank=True)
 
+    class Meta:
+        ordering = ['name']
+
     def __str__(self):
         return self.name
 
@@ -25,6 +28,9 @@ class Lot(models.Model):
     owner = models.ForeignKey(Contact, related_name='owns_lots', blank=True, null=True)
     contacts = models.ManyToManyField(Contact, blank=True)
     details = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ['name']
 
     def __str__(self):
         return self.name

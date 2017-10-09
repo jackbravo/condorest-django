@@ -65,5 +65,8 @@ class Fee(models.Model):
     lot = models.ForeignKey(Lot, on_delete=models.PROTECT)
     amount = models.DecimalField(max_digits=13, decimal_places=2)
 
+    class Meta:
+        ordering = ["date"]
+
     def __str__(self):
         return date(self.date, "Y/m") + ' ' + self.lot.name + ' ' + str(self.amount)
