@@ -43,5 +43,10 @@ class ReceiptAdmin(admin.ModelAdmin):
     inlines = [FeeLinesInline]
 
 
+class FeeAdmin(admin.ModelAdmin):
+    list_display = ['date', 'lot', 'amount']
+    list_filter = ['date']
+
+
 admin.site.register(Receipt, ReceiptAdmin)
-admin.site.register(Fee)
+admin.site.register(Fee, FeeAdmin)

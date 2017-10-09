@@ -19,6 +19,7 @@ from django.contrib import admin
 from condorest import settings
 
 urlpatterns = [
+    url(r'^revenue/', include('revenue.urls')),
     url(r'^lots/', include('lots.urls')),
     url(r'^admin/', admin.site.urls),
 ]

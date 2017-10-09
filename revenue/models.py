@@ -1,4 +1,5 @@
 from django.db import models
+from django.template.defaultfilters import date
 from django.utils import timezone
 
 from ledger.models import Entry, Account
@@ -63,3 +64,6 @@ class Fee(models.Model):
     date = MonthField(db_index=True, default=timezone.now)
     lot = models.ForeignKey(Lot, on_delete=models.PROTECT)
     amount = models.DecimalField(max_digits=13, decimal_places=2)
+
+    def __str__(self):
+        return date(self.date, "Y/m") + ' ' + self.lot.name + ' ' + str(self.amount)

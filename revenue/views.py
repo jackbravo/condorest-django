@@ -1,3 +1,9 @@
+from datetime import datetime
+
 from django.shortcuts import render
 
-# Create your views here.
+from revenue.models import Fee
+
+
+def index(request):
+    Fee.objects.filter(date__year=datetime.now().year)
