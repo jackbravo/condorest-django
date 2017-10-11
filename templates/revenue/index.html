@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Revenue</title>
+</head>
+<body>
+<h1>Revenue</h1>
+
+<table>
+<thead>
+<tr>
+    <th>Lot</th>
+    <th>Jan</th>
+    <th>Feb</th>
+    <th>Mar</th>
+    <th>Apr</th>
+    <th>May</th>
+    <th>Jun</th>
+    <th>Jul</th>
+    <th>Aug</th>
+    <th>Sep</th>
+    <th>Oct</th>
+    <th>Nov</th>
+    <th>Dec</th>
+</tr>
+</thead>
+<tbody>
+{% for row in data %}
+    <tr>
+    {% for item in row %}
+        <td>{{ item }}</td>
+    {% endfor %}
+    </tr>
+{% endfor %}
+</tbody>
+</table>
+
+</body>
+</html>
