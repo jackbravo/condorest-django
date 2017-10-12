@@ -1,15 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Revenue</title>
-</head>
-<body>
+{% extends 'base.html' %}
+
+{% block content %}
 <h1>Revenue</h1>
 
 <a href="{% url 'bulk-create-fees' %}">Create Fees</a>
 
-<table>
+<table class="table table-bordered table-hover table-sm">
 <thead>
 <tr>
     <th>Lot</th>
@@ -37,6 +33,5 @@
 {% endfor %}
 </tbody>
 </table>
+{% endblock %}
 
-</body>
-</html>
