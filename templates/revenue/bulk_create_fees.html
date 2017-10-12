@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <h1>Create Fees</h1>
@@ -7,8 +8,8 @@ Default fee cost by lot can be set in the <a href="{% url 'admin:lots_lot_change
 
 <form action="" method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    <input type="submit" name="create fees" value="Create fees" />
+    {{ form|crispy }}
+    <input class="btn btn-primary" type="submit" name="create fees" value="Create fees" />
 </form>
 {% endblock %}
 
