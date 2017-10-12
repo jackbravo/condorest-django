@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Fees</title>
+</head>
+<body>
+<h1>Create Fees</h1>
+
+Default fee cost by lot can be set in the <a href="{% url 'admin:lots_lot_changelist' %}">admin</a>.
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="create fees" value="Create fees" />
+</form>
+
+</body>
+</html>

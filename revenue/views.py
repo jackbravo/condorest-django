@@ -1,6 +1,9 @@
 from datetime import datetime
 
 from django.shortcuts import render
+from django.views.generic.edit import FormView
+
+from revenue.forms import BulkCreateFeesForm
 
 
 def index(request):
@@ -45,3 +48,12 @@ def index(request):
         return render(request, 'revenue/index.html', context={
             'data': data,
         })
+
+class BulkCreateFeesView(FormView):
+    template_name = 'revenue/bulk_create_fees.html'
+    form_class = BulkCreateFeesForm
+    success_url = '/revenue/'
+
+    def form_valid(self, form):
+        form.create_fees()
+        return super().form_valid(form)
