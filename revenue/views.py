@@ -19,7 +19,8 @@ def index(request):
             WHERE date >= '2017-01-01'::date and date < '2018-01-01'::date
           ) as fees
           INNER JOIN lots_lot ON lots_lot.id = lot_id
-          GROUP BY name, date order by date
+          GROUP BY name, date
+          ORDER BY 1, 2
         $$, $$
           SELECT m::date
           FROM generate_series(timestamp '%s-01-01', timestamp '%s-12-01', '1 month') m
