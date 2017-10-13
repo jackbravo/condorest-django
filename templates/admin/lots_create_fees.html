@@ -1,0 +1,15 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<h1>Create Fees</h1>
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="action" value="create_fees" />
+    <input type="submit" name="update" value="Create fees" class="btn btn-primary" />
+    <p>The new fee will be applied to:</p>
+    <ul>{{ lots|unordered_list }}</ul>
+</form>
+{% endblock %}
+

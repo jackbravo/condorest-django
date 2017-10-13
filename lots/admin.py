@@ -4,6 +4,8 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from import_export.admin import ImportExportModelAdmin
 from import_export import resources
+
+from lots.forms import CreateFeesForm, UpdateFeeForm
 from .models import Lot, Contact, LotType
 
 
@@ -30,29 +32,45 @@ class LotAdmin(ImportExportModelAdmin):
     search_fields = ['name', 'address']
     resource_class = LotResource
 
-    actions = ['update_fee']
+    actions = ['create_fees', 'update_fee']
 
-    class UpdateFeeForm(forms.Form):
-        _selected_action = forms.CharField(widget=forms.MultipleHiddenInput)
-        select_across = forms.BooleanField(required=False, widget=forms.HiddenInput())
-        fee = forms.DecimalField()
-
-    def update_fee(self, request, queryset):
+    def create_fees(self, request, queryset):
         if 'update' in request.POST:
-            form = self.UpdateFeeForm(request.POST)
+            form = CreateFeesForm(request.POST)
 
             if form.is_valid():
-                fee = form.cleaned_data['fee']
-                queryset.update(default_fee=fee)
-
+                count = form.create_fees(queryset)
                 self.message_user(
                     request,
-                    "Changed default fee on {} lots".format(queryset.count())
+                    "Created {} fees".format(count)
                 )
                 return HttpResponseRedirect(request.get_full_path())
 
         else:
-            form = self.UpdateFeeForm(initial={
+            form = CreateFeesForm(initial={
+                '_selected_action': request.POST.getlist(admin.ACTION_CHECKBOX_NAME),
+                'select_across': request.POST['select_across']
+            })
+
+        return render(request, 'admin/lots_create_fees.html', context={
+            'form': form,
+            'lots': queryset,
+        })
+
+    def update_fee(self, request, queryset):
+        if 'update' in request.POST:
+            form = UpdateFeeForm(request.POST)
+
+            if form.is_valid():
+                count = form.update_fee(queryset)
+                self.message_user(
+                    request,
+                    "Changed default fee on {} lots".format(count)
+                )
+                return HttpResponseRedirect(request.get_full_path())
+
+        else:
+            form = UpdateFeeForm(initial={
                 '_selected_action': request.POST.getlist(admin.ACTION_CHECKBOX_NAME),
                 'select_across': request.POST['select_across']
             })
