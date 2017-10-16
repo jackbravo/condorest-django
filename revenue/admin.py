@@ -16,7 +16,7 @@ class FeeLinesInlineFormSet(forms.BaseInlineFormSet):
                 continue # there are other errors in the form or the item was deleted
             total += form.cleaned_data.get('amount', 0)
 
-        self.instance.total_amount = total
+        self.instance.amount = total
 
 
 class FeeLineForm(forms.ModelForm):
@@ -38,9 +38,9 @@ class FeeLinesInline(admin.TabularInline):
 
 
 class ReceiptAdmin(admin.ModelAdmin):
-    list_display = ['date', 'contact', 'asset', 'total_amount']
-    readonly_fields = ['total_amount']
-    fields = ('date', 'contact', 'number', 'details', 'asset', 'total_amount', 'save_in_ledger')
+    list_display = ['date', 'contact', 'account', 'amount']
+    readonly_fields = ['amount']
+    fields = ('date', 'contact', 'number', 'details', 'account', 'amount', 'save_in_ledger')
     inlines = [FeeLinesInline]
 
 
