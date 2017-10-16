@@ -22,6 +22,9 @@ class Migration(migrations.Migration):
                 ('phone_number', models.CharField(blank=True, max_length=254)),
                 ('details', models.TextField(blank=True)),
             ],
+            options={
+                'ordering': ['name'],
+            },
         ),
         migrations.CreateModel(
             name='Lot',
@@ -33,6 +36,9 @@ class Migration(migrations.Migration):
                 ('contacts', models.ManyToManyField(blank=True, to='lots.Contact')),
                 ('details', models.TextField(blank=True)),
             ],
+            options={
+                'ordering': ['name'],
+            },
         ),
         migrations.CreateModel(
             name='LotType',
