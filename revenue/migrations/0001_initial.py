@@ -54,6 +54,9 @@ class Migration(migrations.Migration):
                 ('contact', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='lots.Contact')),
                 ('entry', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='ledger.Entry')),
             ],
+            options={
+                'abstract': False,
+            },
         ),
         migrations.AddField(
             model_name='feeline',
