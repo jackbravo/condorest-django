@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'ledger.apps.LedgerConfig',
     'lots.apps.LotsConfig',
     'revenue.apps.RevenueConfig',
+    'expense.apps.ExpenseConfig',
 
     'django.contrib.admin',
     'django.contrib.auth',
