@@ -4,7 +4,8 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 
-from lots.models import LotType
+from lots.models import LotType, Lot
+from revenue.models import Fee, Receipt
 
 
 def load_data(apps, schema_editor):
@@ -14,6 +15,9 @@ def load_data(apps, schema_editor):
     LotType(name="Lote").save()
 
 def remove_data(apps, schema_editor):
+    Receipt.objects.all().delete()
+    Fee.objects.all().delete()
+    Lot.objects.all().delete()
     LotType.objects.all().delete()
 
 
