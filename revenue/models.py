@@ -10,6 +10,7 @@ from django.utils.translation import ugettext_lazy as _
 
 class Receipt(IncomeExpenseNote):
     account = models.ForeignKey(Account, limit_choices_to={'type':"asset"})
+    default_account = 'Fees'
 
 
 class FeeLine(models.Model):

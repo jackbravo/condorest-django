@@ -75,6 +75,8 @@ class IncomeExpenseNote(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 
+    default_account = 'Fees'
+
     class Meta:
         abstract = True
 
@@ -84,7 +86,7 @@ class IncomeExpenseNote(models.Model):
             if self.entry is None:
                 entry = Entry(date=self.date)
                 entry.save()
-                revenue = Account.objects.get(name="Fees")
+                revenue = Account.objects.get(name=self.default_account)
                 entry.amount_set.create(amount=self.amount, account=revenue)
                 entry.amount_set.create(amount=-self.amount, account=self.account)
                 self.entry = entry
