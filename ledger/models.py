@@ -86,8 +86,8 @@ class IncomeExpenseNote(models.Model):
             if self.entry is None:
                 entry = Entry(date=self.date)
                 entry.save()
-                revenue = Account.objects.get(name=self.default_account)
-                entry.amount_set.create(amount=self.amount, account=revenue)
+                default_account = Account.objects.get(name=self.default_account)
+                entry.amount_set.create(amount=self.amount, account=default_account)
                 entry.amount_set.create(amount=-self.amount, account=self.account)
                 self.entry = entry
             else:
