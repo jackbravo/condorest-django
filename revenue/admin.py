@@ -38,10 +38,14 @@ class FeeLinesInline(admin.TabularInline):
 
 
 class ReceiptAdmin(admin.ModelAdmin):
-    list_display = ['date', 'contact', 'debit_account', 'credit_account', 'amount']
+    list_display = ['date', 'detail', 'contact', 'debit_account', 'credit_account', 'amount']
+    list_filter = ['date']
     readonly_fields = ['amount']
     fields = ('date', 'contact', 'number', 'details', 'debit_account', 'credit_account', 'amount', 'save_in_ledger')
     inlines = [FeeLinesInline]
+
+    def detail(self, obj):
+        return obj.details.split('\n', 1)[0]
 
 
 class FeeAdmin(admin.ModelAdmin):
