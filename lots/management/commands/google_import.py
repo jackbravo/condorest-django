@@ -1,16 +1,22 @@
 # Requirements:
 # - pip install gspread oauth2client
-from django.core.management.base import BaseCommand
-import csv
+from decimal import Decimal
+from django.core.management.base import BaseCommand, CommandError
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
+from datetime import datetime
 
+from expense.models import ExpenseNote
+from ledger.models import Account, Entry
 from lots.models import Lot, LotType, Contact
 from revenue.models import Receipt, Fee
 
 
 class Command(BaseCommand):
-    help = 'Import lots from a .csv file'
+    help = 'Import lots from google. Types are: mantenimiento, vecinos'
+
+    def add_arguments(self, parser):
+        parser.add_argument('type', nargs='+', type=str)
 
     def handle(self, *args, **options):
         # use creds to create a client to interact with the Google Drive API
@@ -18,25 +24,74 @@ class Command(BaseCommand):
         creds = ServiceAccountCredentials.from_json_keyfile_name('client_secret.json', scope)
         client = gspread.authorize(creds)
 
-        self.import_mantenimiento(client)
-        exit(0)
-        self.delete_all()
-        self.import_vecinos(client)
+        types = {
+            'mantenimiento': self.import_mantenimiento,
+            'vecinos': self.import_vecinos,
+        }
 
-    def delete_all(self):
+        for type in options['type']:
+            types.get(type, self.error_handler)(client)
+
+    def error_handler(self, client):
+        raise CommandError('Your import option does not exist')
+
+    def import_mantenimiento(self, client):
+        Entry.objects.all().delete()
         Receipt.objects.all().delete()
-        Fee.objects.all().delete()
+        ExpenseNote.objects.all().delete()
+
+        sheet = client.open("R/ I-E MANTENIMIENTO.xlsx").worksheet("may-16")
+
+        records = sheet.get_all_records(head=5)
+
+        administrative = Account.objects.get(name='Administrative')
+        cash = Account.objects.get(name='Cash')
+
+        income = Decimal('0.00')
+        expense = Decimal('0.00')
+        current_date = datetime.now()
+        for row in records:
+            current_date = datetime.strptime(row['Fecha'], '%d-%m-%y') if row['Fecha'] != '' else current_date
+            owner = Contact.objects.filter(owns_lots__name=row['Clave']).first() if row['Clave'] != '' else None
+            if row['Ingreso'] != '':
+                amount = Decimal(row['Ingreso'].strip('$').replace(',', ''))
+                if amount == income:
+                    break
+                item, created = Receipt.objects.get_or_create(
+                    number=row['Folio'],
+                    defaults={
+                        'number': row['Folio'],
+                        'amount': amount,
+                        'date': current_date,
+                        'debit_account': cash,
+                        'contact': owner,
+                        'details': '''Lote: %(Clave)s, Cuota: %(Cuota)s
+                        Nombre: %(Nombre)s''' % row,
+                    }
+                )
+                if not created:
+                    raise Exception('Warning, should not be an old receipt')
+                item.save()
+                income += amount
+            elif row['Egreso'] != '':
+                amount = Decimal(row['Egreso'].strip('$').replace(',', ''))
+                item = ExpenseNote(
+                    number=row['Folio'],
+                    amount=amount,
+                    credit_account=cash,
+                    debit_account=administrative,
+                    date=current_date,
+                    details=row['Concepto'],
+                )
+                item.save()
+                expense += amount
+
+        print("Finished importing mantenimiento")
+
+    def import_vecinos(self, client):
         Contact.objects.all().delete()
         Lot.objects.all().delete()
 
-    def import_mantenimiento(self, client):
-        sheet = client.open("R/ I-E MANTENIMIENTO.xlsx").worksheet("ene-17")
-
-        # Extract and print all of the values
-        records = sheet.get_all_records(head=5)
-        print(records)
-
-    def import_vecinos(self, client):
         sheet = client.open("Vecinos y sugerencias").worksheet("DATOS DE RESIDENTES")
 
         # Extract and print all of the values
@@ -93,3 +148,5 @@ class Command(BaseCommand):
                     contact.details = 'Porfesión: ' + row['PROFESION ELLA']
                 contact.save()
                 lot.contacts.add(contact)
+
+        print("Finished importing vecinos")
