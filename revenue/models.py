@@ -10,7 +10,10 @@ from django.utils.translation import ugettext_lazy as _
 
 class Receipt(IncomeExpenseNote):
     debit_account = models.ForeignKey(Account, limit_choices_to={'type':"asset"}, related_name='receipt_debit_accounts')
-    credit_account = models.ForeignKey(Account, limit_choices_to={'type':"revenue"}, related_name='receipt_credit_accounts', default='Fees')
+    credit_account = models.ForeignKey(Account, limit_choices_to={'type':"revenue"},
+        related_name='receipt_credit_accounts',
+        default=lambda: Account.objects.get(name='Fees')
+    )
 
 
 class FeeLine(models.Model):
