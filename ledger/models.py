@@ -8,6 +8,11 @@ DEBIT = 'debit'
 CREDIT = 'credit'
 
 
+class AccountManager(models.Manager):
+    def get_by_natural_key(self, name):
+        return self.get(name=name)
+
+
 class Account(models.Model):
     DEBIT_TYPES = (
         ('asset', 'Asset'),
@@ -20,6 +25,8 @@ class Account(models.Model):
     )
     TYPES = DEBIT_TYPES + CREDIT_TYPES
 
+    objects = AccountManager
+
     name = models.CharField(max_length=200, unique=True)
     type = models.CharField(max_length=20, choices=TYPES, db_index=True)
     contra = models.BooleanField(default=False)
@@ -28,6 +35,9 @@ class Account(models.Model):
 
     def __str__(self):
         return self.name
+
+    def natural_key(self):
+        return (self.name,)
 
 
 class Entry(models.Model):
