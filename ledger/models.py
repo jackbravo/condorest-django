@@ -74,18 +74,17 @@ class Amount(models.Model):
 
 class IncomeExpenseNote(models.Model):
     date = models.DateField(db_index=True)
-    number = models.IntegerField(null=True, blank=True, db_index=True)
+    number = models.CharField(max_length=254, null=True, blank=True, db_index=True)
     details = models.CharField(max_length=254, blank=True)
     amount = models.DecimalField(max_digits=13, decimal_places=2)
     contact = models.ForeignKey(Contact, on_delete=models.PROTECT, null=True, blank=True)
     save_in_ledger = models.BooleanField(blank=True, default=True)
-    account = models.ForeignKey(Account)
+    debit_account = models.ForeignKey(Account, related_name='debit_accounts')
+    credit_account = models.ForeignKey(Account, related_name='credit_accounts')
     entry = models.ForeignKey(Entry, null=True, blank=True, on_delete=models.SET_NULL)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
-    default_account = 'Fees'
 
     class Meta:
         abstract = True
@@ -96,16 +95,16 @@ class IncomeExpenseNote(models.Model):
             if self.entry is None:
                 entry = Entry(date=self.date)
                 entry.save()
-                default_account = Account.objects.get(name=self.default_account)
-                entry.amount_set.create(amount=self.amount, account=default_account)
-                entry.amount_set.create(amount=-self.amount, account=self.account)
+                entry.amount_set.create(amount=self.amount, account=self.debit_account)
+                entry.amount_set.create(amount=-self.amount, account=self.credit_account)
                 self.entry = entry
             else:
                 a1, a2 = self.entry.amount_set.all()
                 a1.amount = self.amount
+                a2.account = self.debit_account
                 a1.save()
                 a2.amount = -self.amount
-                a2.account = self.account
+                a2.account = self.credit_account
                 a2.save()
                 self.entry.date = self.date
                 self.entry.save()

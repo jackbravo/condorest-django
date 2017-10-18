@@ -38,9 +38,9 @@ class FeeLinesInline(admin.TabularInline):
 
 
 class ReceiptAdmin(admin.ModelAdmin):
-    list_display = ['date', 'contact', 'account', 'amount']
+    list_display = ['date', 'contact', 'debit_account', 'credit_account', 'amount']
     readonly_fields = ['amount']
-    fields = ('date', 'contact', 'number', 'details', 'account', 'amount', 'save_in_ledger')
+    fields = ('date', 'contact', 'number', 'details', 'debit_account', 'credit_account', 'amount', 'save_in_ledger')
     inlines = [FeeLinesInline]
 
 
