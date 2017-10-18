@@ -12,7 +12,7 @@ class Receipt(IncomeExpenseNote):
     debit_account = models.ForeignKey(Account, limit_choices_to={'type':"asset"}, related_name='receipt_debit_accounts')
     credit_account = models.ForeignKey(Account, limit_choices_to={'type':"revenue"},
         related_name='receipt_credit_accounts',
-        default=lambda: Account.objects.get(name='Fees')
+        default=3 # lambda: Account.objects.get(name='Fees')
     )
 
 

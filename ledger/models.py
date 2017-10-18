@@ -38,8 +38,8 @@ class Entry(models.Model):
 
 
 class Amount(models.Model):
-    entry = models.ForeignKey(Entry)
-    account = models.ForeignKey(Account)
+    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.PROTECT)
     amount = models.DecimalField(max_digits=13, decimal_places=2,
                                  help_text='Record debits as positive, credits as negative')
 

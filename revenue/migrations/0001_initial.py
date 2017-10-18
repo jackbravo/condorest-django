@@ -51,7 +51,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
                 ('debit_account', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='receipt_debit_accounts', to='ledger.Account')),
-                ('credit_account', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, default='Fees', related_name='receipt_credit_accounts', to='ledger.Account')),
+                ('credit_account', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, default=3, related_name='receipt_credit_accounts', to='ledger.Account')),
                 ('contact', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, to='lots.Contact')),
                 ('entry', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='ledger.Entry')),
             ],
