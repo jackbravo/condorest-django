@@ -10,7 +10,6 @@ def load_data(apps, schema_editor):
 
     Account(name="Cash", type="asset").save()
     Account(name="Bank", type="asset").save()
-    Account(name="Accrued Expenses", type="liability").save()
     Account(name="Fees", type="revenue").save()
     Account(name="Deposits", type="revenue").save()
     Account(name="Administrative", type="expense").save()
