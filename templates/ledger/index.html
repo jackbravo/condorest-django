@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block content %}
+    <h1>Revenue</h1>
+
+    <table class="table table-bordered table-hover table-sm">
+        <thead>
+        <tr>
+            <th>Account</th>
+            <th>Amount</th>
+            <th>Type</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for row in data %}
+            <tr>
+                <td><a href="{% url 'account-detail' row.id %}">{{ row.name }}</a></td>
+                <td class="text-right">{{ row.amount|intcomma }}</td>
+                <td>{{ row.type }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
