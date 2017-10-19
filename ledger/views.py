@@ -1,8 +1,8 @@
-from django.shortcuts import render
-from django.views.generic import DetailView
+from django.shortcuts import render, get_object_or_404
+from django.views.generic import MonthArchiveView
 
 from condorest.utils import dictfetchall
-from ledger.models import Account
+from ledger.models import Account, Entry
 
 
 def index(request):
@@ -22,9 +22,14 @@ def index(request):
             'data': data,
         })
 
-class AccountDetailView(DetailView):
+class AccountArchiveView(MonthArchiveView):
+    date_field = 'date'
+    month_format = '%m'
+    template_name = 'ledger/account_archive.html'
 
-    model = Account
+    def get_queryset(self):
+        self.account = get_object_or_404(Account, name=self.kwargs['account'])
+        return Entry.objects.filter(amount__account=self.account)
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
