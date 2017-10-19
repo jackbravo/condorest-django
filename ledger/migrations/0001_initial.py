@@ -26,26 +26,16 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='Amount',
-            fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('amount', models.DecimalField(decimal_places=2, help_text='Record debits as positive, credits as negative', max_digits=13)),
-                ('account', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='ledger.Account')),
-            ],
-        ),
-        migrations.CreateModel(
             name='Entry',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('details', models.CharField(max_length=254, blank=True, null=True)),
                 ('date', models.DateField(db_index=True)),
+                ('amount', models.DecimalField(decimal_places=2, max_digits=13)),
+                ('debit_account', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='ledger.Account', related_name='debit_entries')),
+                ('credit_account', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='ledger.Account', related_name='credit_entries')),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
             ],
-        ),
-        migrations.AddField(
-            model_name='amount',
-            name='entry',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='ledger.Entry'),
         ),
     ]

@@ -9,11 +9,20 @@ def index(request):
     from django.db import connection
 
     with connection.cursor() as cursor:
-        sql = '''SELECT ac.id, name, SUM(amount) amount, type
-        FROM ledger_account ac
-        INNER JOIN ledger_amount am ON am.account_id = ac.id
-        GROUP BY ac.id, name
-        ORDER BY name, type'''
+        sql = '''SELECT id, name, SUM(amount) amount, type FROM (
+            SELECT a.id, name, SUM(amount) amount, type
+            FROM ledger_entry e
+            INNER JOIN ledger_account a ON e.debit_account_id = a.id
+            GROUP BY a.id, name
+            UNION ALL
+            SELECT a.id, name, -SUM(amount) amount, type
+            FROM ledger_entry e
+            INNER JOIN ledger_account a ON e.credit_account_id = a.id
+            GROUP BY a.id, name
+        ) as ledger
+        GROUP BY id, name, type
+        ORDER BY type, name
+        '''
 
         cursor.execute(sql)
         data = dictfetchall(cursor)

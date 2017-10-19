@@ -18,7 +18,6 @@ def load_data(apps, schema_editor):
 
 def remove_data(apps, schema_editor):
     with connection.cursor() as cursor:
-        cursor.execute('DELETE FROM ledger_amount')
         cursor.execute('DELETE FROM ledger_entry')
         cursor.execute('DELETE FROM ledger_account')
 

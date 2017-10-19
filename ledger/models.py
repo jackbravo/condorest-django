@@ -35,34 +35,25 @@ class Entry(models.Model):
     date = models.DateField(db_index=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-
-
-class Amount(models.Model):
-    entry = models.ForeignKey(Entry, on_delete=models.CASCADE)
-    account = models.ForeignKey(Account, on_delete=models.PROTECT)
-    amount = models.DecimalField(max_digits=13, decimal_places=2,
-                                 help_text='Record debits as positive, credits as negative')
+    debit_account = models.ForeignKey(Account, on_delete=models.PROTECT, related_name='debit_entries')
+    credit_account = models.ForeignKey(Account, on_delete=models.PROTECT, related_name='credit_entries')
+    amount = models.DecimalField(max_digits=13, decimal_places=2)
 
     def clean(self):
         if self.amount == 0:
             raise ValidationError({'amount': _("Amount must not be 0")})
 
-    @property
-    def type(self):
-        if self.amount < 0:
-            return DEBIT
-        elif self.amount > 0:
-            return CREDIT
-        else:
-            # This should have been caught earlier by the database integrity check.
-            # If you are seeing this then something is wrong with your DB checks.
-            raise Exception('ZeroAmount error')
-
-    def __str__(self):
-        return str(self.account) + ": " + str(self.amount)
-
     def delete(self, using=None, keep_parents=False):
-        # figure out how to set save_in_ledger to False on receipt or expensenote
+        if hasattr(self, 'receipt'):
+            receipt = self.receipt
+            receipt.save_in_ledger = False
+            receipt.entry = None
+            receipt.save()
+        if hasattr(self, 'expensenote'):
+            expensenote = self.expensenote
+            expensenote.save_in_ledger = False
+            expensenote.entry = None
+            expensenote.save()
         super().delete(using=using, keep_parents=keep_parents)
 
 
@@ -87,21 +78,19 @@ class IncomeExpenseNote(models.Model):
              update_fields=None):
         if self.save_in_ledger:
             if self.entry is None:
-                entry = Entry(date=self.date, details=self.details)
+                entry = Entry(date=self.date,
+                              details=self.details,
+                              amount=self.amount,
+                              debit_account=self.debit_account,
+                              credit_account=self.credit_account)
                 entry.save()
-                entry.amount_set.create(amount=self.amount, account=self.debit_account)
-                entry.amount_set.create(amount=-self.amount, account=self.credit_account)
                 self.entry = entry
             else:
-                a1, a2 = self.entry.amount_set.all()
-                a1.amount = self.amount
-                a2.account = self.debit_account
-                a1.save()
-                a2.amount = -self.amount
-                a2.account = self.credit_account
-                a2.save()
                 self.entry.date = self.date
                 self.entry.details = self.details
+                self.entry.debit_account = self.debit_account
+                self.entry.credit_account = self.credit_account
+                self.entry.amount = self.amount
                 self.entry.save()
         else:
             if self.entry is not None:
