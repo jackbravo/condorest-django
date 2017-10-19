@@ -49,9 +49,9 @@ class Amount(models.Model):
 
     @property
     def type(self):
-        if self.amount.amount < 0:
+        if self.amount < 0:
             return DEBIT
-        elif self.amount.amount > 0:
+        elif self.amount > 0:
             return CREDIT
         else:
             # This should have been caught earlier by the database integrity check.
@@ -60,6 +60,10 @@ class Amount(models.Model):
 
     def __str__(self):
         return str(self.account) + ": " + str(self.amount)
+
+    def delete(self, using=None, keep_parents=False):
+        # figure out how to set save_in_ledger to False on receipt or expensenote
+        super().delete(using=using, keep_parents=keep_parents)
 
 
 class IncomeExpenseNote(models.Model):
