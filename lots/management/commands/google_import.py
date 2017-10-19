@@ -71,7 +71,6 @@ class Command(BaseCommand):
                 )
                 if not created:
                     raise Exception('Warning, should not be an old receipt')
-                item.save()
                 income += amount
             elif row['Egreso'] != '':
                 amount = Decimal(row['Egreso'].strip('$').replace(',', ''))
