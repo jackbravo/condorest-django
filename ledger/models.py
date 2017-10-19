@@ -71,7 +71,7 @@ class IncomeExpenseNote(models.Model):
     save_in_ledger = models.BooleanField(blank=True, default=True)
     debit_account = models.ForeignKey(Account, related_name='debit_accounts')
     credit_account = models.ForeignKey(Account, related_name='credit_accounts')
-    entry = models.ForeignKey(Entry, null=True, blank=True, on_delete=models.SET_NULL)
+    entry = models.OneToOneField(Entry, on_delete=models.SET_NULL, null=True, blank=True)
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
