@@ -32,6 +32,8 @@ class AmountInline(admin.TabularInline):
 
 class EntryAdmin(admin.ModelAdmin):
     inlines = [AmountInline]
+    list_display = ['date', 'details', 'created', 'updated']
+    list_filter = ['date']
 
 
 admin.site.register(Entry, EntryAdmin)
