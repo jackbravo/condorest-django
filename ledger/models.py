@@ -31,7 +31,7 @@ class Account(models.Model):
 
 
 class Entry(models.Model):
-    description = models.TextField(blank=True, null=True) # TODO: rename as details and make charfield
+    details = models.CharField(max_length=254, blank=True, null=True)
     date = models.DateField(db_index=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
@@ -81,10 +81,9 @@ class IncomeExpenseNote(models.Model):
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
-        # TODO: save also details in the entry object
         if self.save_in_ledger:
             if self.entry is None:
-                entry = Entry(date=self.date)
+                entry = Entry(date=self.date, details=self.details)
                 entry.save()
                 entry.amount_set.create(amount=self.amount, account=self.debit_account)
                 entry.amount_set.create(amount=-self.amount, account=self.credit_account)
@@ -98,6 +97,7 @@ class IncomeExpenseNote(models.Model):
                 a2.account = self.credit_account
                 a2.save()
                 self.entry.date = self.date
+                self.entry.details = self.details
                 self.entry.save()
         else:
             if self.entry is not None:

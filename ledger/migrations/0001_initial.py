@@ -37,7 +37,7 @@ class Migration(migrations.Migration):
             name='Entry',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('description', models.TextField(blank=True, null=True)),
+                ('details', models.CharField(max_length=254, blank=True, null=True)),
                 ('date', models.DateField(db_index=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('updated', models.DateTimeField(auto_now=True)),
