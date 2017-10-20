@@ -25,8 +25,8 @@ class Command(BaseCommand):
         client = gspread.authorize(creds)
 
         types = {
-            'mantenimiento': self.import_mantenimiento,
-            'vecinos': self.import_vecinos,
+            'cash_account': self.import_cash_account,
+            'contacts': self.import_contacts,
         }
 
         for type in options['type']:
@@ -35,7 +35,7 @@ class Command(BaseCommand):
     def error_handler(self, client):
         raise CommandError('Your import option does not exist')
 
-    def import_mantenimiento(self, client):
+    def import_cash_account(self, client):
         Entry.objects.all().delete()
         Receipt.objects.all().delete()
         ExpenseNote.objects.all().delete()
@@ -51,12 +51,12 @@ class Command(BaseCommand):
         for sheet_name in sheets:
             sheet = client.open("R/ I-E MANTENIMIENTO.xlsx").worksheet(sheet_name)
             records = sheet.get_all_records(head=5)
-            self._import_mantenimiento_records(records)
+            self._import_cash_account_records(records)
             print('Finished:', sheet_name)
 
-        print("Finished importing mantenimiento")
+        print("Finished importing cash_account")
 
-    def _import_mantenimiento_records(self, records):
+    def _import_cash_account_records(self, records):
         administrative = Account.objects.get(name='Administrative')
         cash = Account.objects.get(name='Cash')
 
@@ -116,7 +116,7 @@ class Command(BaseCommand):
                 item.save()
                 expense += amount
 
-    def import_vecinos(self, client):
+    def import_contacts(self, client):
         Contact.objects.all().delete()
         Lot.objects.all().delete()
 
@@ -177,4 +177,4 @@ class Command(BaseCommand):
                 contact.save()
                 lot.contacts.add(contact)
 
-        print("Finished importing vecinos")
+        print("Finished importing contacts")
