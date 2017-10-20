@@ -7,13 +7,13 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
 from expense.models import ExpenseNote
-from ledger.models import Account, Entry
+from ledger.models import Account
 from lots.models import Lot, LotType, Contact
 from revenue.models import Receipt, Fee
 
 
 class Command(BaseCommand):
-    help = 'Import lots from google. Types are: mantenimiento, vecinos'
+    help = 'Import lots from '
 
     def add_arguments(self, parser):
         parser.add_argument('type', nargs='+', type=str)
@@ -36,14 +36,19 @@ class Command(BaseCommand):
         raise CommandError('Your import option does not exist')
 
     def import_mantenimiento(self, client):
-        Entry.objects.all().delete()
         Receipt.objects.all().delete()
         ExpenseNote.objects.all().delete()
 
-        sheet = client.open("R/ I-E MANTENIMIENTO.xlsx").worksheet("may-16")
+        sheets = ('may-16', 'ago-16', 'sep-16', 'oct-16', 'nov-16', 'dic-16',) # 'ene-17', 'feb-17', 'mar-17', 'abr-17', 'may-17', 'jun-17', 'jul-17', 'ago-17', 'sep-17',)
 
-        records = sheet.get_all_records(head=5)
+        for sheet_name in sheets:
+            sheet = client.open("R/ I-E MANTENIMIENTO.xlsx").worksheet(sheet_name)
+            records = sheet.get_all_records(head=5)
+            self._import_mantenimiento_records(records)
 
+        print("Finished importing mantenimiento")
+
+    def _import_mantenimiento_records(self, records):
         administrative = Account.objects.get(name='Administrative')
         cash = Account.objects.get(name='Cash')
 
@@ -65,12 +70,13 @@ class Command(BaseCommand):
                         'date': current_date,
                         'debit_account': cash,
                         'contact': owner,
-                        'details': '''Lote: %(Clave)s, Cuota: %(Cuota)s
+                        'details': '''Lote: %(Clave)s, Cuotas: %(Cuotas)s
                         Nombre: %(Nombre)s''' % row,
                     }
                 )
                 if not created:
                     raise Exception('Warning, should not be an old receipt')
+                item.save()
                 income += amount
             elif row['Egreso'] != '':
                 amount = Decimal(row['Egreso'].strip('$').replace(',', ''))
@@ -84,8 +90,6 @@ class Command(BaseCommand):
                 )
                 item.save()
                 expense += amount
-
-        print("Finished importing mantenimiento")
 
     def import_vecinos(self, client):
         Contact.objects.all().delete()
