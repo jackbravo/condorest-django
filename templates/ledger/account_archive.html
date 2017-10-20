@@ -7,6 +7,10 @@
 <table class="table table-bordered table-hover table-sm">
 <thead>
     <tr>
+        <th colspan="3">Previous balance</th>
+        <th colspan="2" class="text-right">{{ previous_balance|intcomma }}</th>
+    </tr>
+    <tr>
         <th>Date</th>
         <th>Details</th>
         <th>To Account</th>
@@ -20,19 +24,30 @@
         <td>{{ entry.date }}</td>
         <td>{{ entry.details }}</td>
         <td>{% if account == entry.debit_account %}{{ entry.credit_account }}{% else %}{{ entry.debit_account }}{% endif %}</td>
-        <td>{% if account == entry.debit_account %}{{ entry.amount }}{% endif %}</td>
-        <td>{% if account == entry.credit_account %}{{ entry.amount }}{% endif %}</td>
+        <td class="text-right">{% if account == entry.debit_account %}{{ entry.amount|intcomma }}{% endif %}</td>
+        <td class="text-right">{% if account == entry.credit_account %}{{ entry.amount|intcomma }}{% endif %}</td>
     </tr>
 {% endfor %}
 </tbody>
+<tfoot>
+    <tr>
+        <th colspan="3">Totals</th>
+        <th class="text-right">{{ total_debit|intcomma }}</th>
+        <th class="text-right">{{ total_credit|intcomma }}</th>
+    </tr>
+    <tr>
+        <th colspan="3">Current balance</th>
+        <th colspan="2" class="text-right">{{ current_balance|intcomma }}</th>
+    </tr>
+</tfoot>
 </table>
 
 <p>
     {% if previous_month %}
-        Previous Month: {{ previous_month|date:"F Y" }}
+        Previous Month: <a href="{% url 'account-archive' account.name previous_month.year previous_month.month %}">{{ previous_month|date:"F Y" }}</a>
     {% endif %}
     {% if next_month %}
-        Next Month: {{ next_month|date:"F Y" }}
+        Next Month: <a href="{% url 'account-archive' account.name next_month.year next_month.month %}">{{ next_month|date:"F Y" }}</a>
     {% endif %}
 </p>
 {% endblock %}

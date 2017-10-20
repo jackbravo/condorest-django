@@ -1,6 +1,9 @@
+from datetime import datetime
+
+from decimal import Decimal
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import MonthArchiveView
-from django.db.models import Q
+from django.db.models import Q, Sum
 
 from condorest.utils import dictfetchall
 from ledger.models import Account, Entry
@@ -39,11 +42,29 @@ class AccountArchiveView(MonthArchiveView):
 
     def get_queryset(self):
         self.account = get_object_or_404(Account, name=self.kwargs['account'])
-        return Entry.objects.filter(Q(credit_account=self.account) | Q(debit_account=self.account))
+        return Entry.objects.filter(Q(credit_account=self.account) | Q(debit_account=self.account))\
+            .prefetch_related('credit_account')\
+            .prefetch_related('debit_account')
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
-        # Add in a QuerySet of all the books
         context['account'] = self.account
+
+        first_day_month = datetime(year=int(self.get_year()), month=int(self.get_month()), day=1)
+
+        debit = Entry.objects.filter(debit_account=self.account, date__lt=first_day_month).aggregate(Sum('amount'))['amount__sum']
+        credit = Entry.objects.filter(credit_account=self.account, date__lt=first_day_month).aggregate(Sum('amount'))['amount__sum']
+        context['previous_balance'] = debit - credit
+
+        total_debit = Decimal('0.00')
+        total_credit = Decimal('0.00')
+        for entry in context['entry_list']:
+            if entry.debit_account == self.account: total_debit += entry.amount
+            if entry.debit_account != self.account: total_credit += entry.amount
+        context['total_debit'] = total_debit
+        context['total_credit'] = total_credit
+
+        context['current_balance'] = context['previous_balance'] + (total_debit - total_credit)
+
         return context
