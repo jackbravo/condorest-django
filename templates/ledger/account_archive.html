@@ -3,4 +3,29 @@
 
 {% block content %}
 <h1>{{ account.name }} <small>{{ account.type }} account</small></h1>
+
+<table class="table table-bordered table-hover table-sm">
+<thead>
+    <tr>
+        <th>Date</th>
+        <th>Details</th>
+        <th>To Account</th>
+        <th>Debit</th>
+        <th>Credit</th>
+    </tr>
+</thead>
+<tbody>
+{% with balance=0 %}
+{% for entry in entry_list %}
+    <tr>
+        <td>{{ entry.date }}</td>
+        <td>{{ entry.details }}</td>
+        <td>{% if account == entry.debit_account %}{{ entry.credit_account }}{% else %}{{ entry.debit_account }}{% endif %}</td>
+        <td>{% if account == entry.debit_account %}{{ entry.amount }}{% endif %}</td>
+        <td>{% if account == entry.credit_account %}{{ entry.amount }}{% endif %}</td>
+    </tr>
+{% endfor %}
+{% endwith %}
+</tbody>
+</table>
 {% endblock %}

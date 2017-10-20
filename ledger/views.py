@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import MonthArchiveView
+from django.db.models import Q
 
 from condorest.utils import dictfetchall
 from ledger.models import Account, Entry
@@ -38,11 +39,11 @@ class AccountArchiveView(MonthArchiveView):
 
     def get_queryset(self):
         self.account = get_object_or_404(Account, name=self.kwargs['account'])
-        return Entry.objects.filter(amount__account=self.account)
+        return Entry.objects.filter(Q(credit_account=self.account) | Q(debit_account=self.account))
 
     def get_context_data(self, **kwargs):
         # Call the base implementation first to get a context
         context = super().get_context_data(**kwargs)
         # Add in a QuerySet of all the books
-        #context['book_list'] = Book.objects.all()
+        context['account'] = self.account
         return context
