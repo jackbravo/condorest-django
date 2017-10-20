@@ -39,6 +39,9 @@ class Entry(models.Model):
     credit_account = models.ForeignKey(Account, on_delete=models.PROTECT, related_name='credit_entries')
     amount = models.DecimalField(max_digits=13, decimal_places=2)
 
+    class Meta:
+        ordering = ['-date', '-id']
+
     def clean(self):
         if self.amount == 0:
             raise ValidationError({'amount': _("Amount must not be 0")})
