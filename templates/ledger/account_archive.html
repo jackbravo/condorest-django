@@ -15,7 +15,6 @@
     </tr>
 </thead>
 <tbody>
-{% with balance=0 %}
 {% for entry in entry_list %}
     <tr>
         <td>{{ entry.date }}</td>
@@ -25,7 +24,15 @@
         <td>{% if account == entry.credit_account %}{{ entry.amount }}{% endif %}</td>
     </tr>
 {% endfor %}
-{% endwith %}
 </tbody>
 </table>
+
+<p>
+    {% if previous_month %}
+        Previous Month: {{ previous_month|date:"F Y" }}
+    {% endif %}
+    {% if next_month %}
+        Next Month: {{ next_month|date:"F Y" }}
+    {% endif %}
+</p>
 {% endblock %}
