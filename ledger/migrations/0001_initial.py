@@ -38,7 +38,7 @@ class Migration(migrations.Migration):
                 ('updated', models.DateTimeField(auto_now=True)),
             ],
             options={
-                'ordering': ['-date', '-id'],
+                'ordering': ['date', 'id'],
             },
         ),
     ]

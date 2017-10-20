@@ -40,7 +40,7 @@ class Entry(models.Model):
     amount = models.DecimalField(max_digits=13, decimal_places=2)
 
     class Meta:
-        ordering = ['-date', '-id']
+        ordering = ['date', 'id']
 
     def clean(self):
         if self.amount == 0:
@@ -79,6 +79,7 @@ class IncomeExpenseNote(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ['date', 'id']
 
     def save(self, force_insert=False, force_update=False, using=None,
              update_fields=None):
