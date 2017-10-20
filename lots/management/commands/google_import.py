@@ -40,7 +40,7 @@ class Command(BaseCommand):
         Receipt.objects.all().delete()
         ExpenseNote.objects.all().delete()
 
-        sheets = ('may-16', 'jun-16', 'jul-16', 'ago-16', 'sep-16', 'oct-16', 'nov-16', 'dic-16',) # 'ene-17', 'feb-17', 'mar-17', 'abr-17', 'may-17', 'jun-17', 'jul-17', 'ago-17', 'sep-17',)
+        sheets = ('may-16', 'jun-16', 'jul-16', 'ago-16', 'sep-16', 'oct-16', 'nov-16', 'dic-16', 'ene-17', 'feb-17', 'Mar-17', 'Abr-17', 'May-17', 'Jun-17', 'Jul-17', 'Ago-17', 'Sep-17', 'Oct-17')
 
         Entry(details='Saldo inicial',
               amount=Decimal('5110.62'),
@@ -52,6 +52,7 @@ class Command(BaseCommand):
             sheet = client.open("R/ I-E MANTENIMIENTO.xlsx").worksheet(sheet_name)
             records = sheet.get_all_records(head=5)
             self._import_mantenimiento_records(records)
+            print('Finished:', sheet_name)
 
         print("Finished importing mantenimiento")
 
@@ -63,7 +64,10 @@ class Command(BaseCommand):
         expense = Decimal('0.00')
         current_date = datetime.now()
         for row in records:
-            current_date = datetime.strptime(row['Fecha'], '%d-%m-%y') if row['Fecha'] != '' else current_date
+            try:
+                current_date = datetime.strptime(row['Fecha'], '%d-%m-%y') if row['Fecha'] != '' else current_date
+            except ValueError:
+                print('Error while parsing date with row', row)
             owner = Contact.objects.filter(owns_lots__name=row['Clave']).first() if row['Clave'] != '' else None
             if row['Ingreso'] != '' and row['Egreso'] != '':
                 ingreso = Decimal(row['Ingreso'].strip('$').replace(',', ''))
@@ -86,6 +90,7 @@ class Command(BaseCommand):
                         }
                     )
                     if not created:
+                        print('Error with old receipt', row)
                         raise Exception('Warning, should not be an old receipt ' + row['Folio'])
                 else:
                     item = Receipt(
