@@ -55,6 +55,8 @@ class AccountArchiveView(MonthArchiveView):
 
         debit = Entry.objects.filter(debit_account=self.account, date__lt=first_day_month).aggregate(Sum('amount'))['amount__sum']
         credit = Entry.objects.filter(credit_account=self.account, date__lt=first_day_month).aggregate(Sum('amount'))['amount__sum']
+        if debit == None: debit = Decimal('0.00')
+        if credit == None: credit = Decimal('0.00')
         context['previous_balance'] = debit - credit
 
         total_debit = Decimal('0.00')
