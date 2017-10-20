@@ -65,10 +65,13 @@ class Command(BaseCommand):
         for row in records:
             current_date = datetime.strptime(row['Fecha'], '%d-%m-%y') if row['Fecha'] != '' else current_date
             owner = Contact.objects.filter(owns_lots__name=row['Clave']).first() if row['Clave'] != '' else None
+            if row['Ingreso'] != '' and row['Egreso'] != '':
+                ingreso = Decimal(row['Ingreso'].strip('$').replace(',', ''))
+                egreso = Decimal(row['Egreso'].strip('$').replace(',', ''))
+                if ingreso == income and egreso == expense:
+                    break
             if row['Ingreso'] != '':
                 amount = Decimal(row['Ingreso'].strip('$').replace(',', ''))
-                if amount == income:
-                    break
                 if row['Folio']:
                     item, created = Receipt.objects.get_or_create(
                         number=row['Folio'],
