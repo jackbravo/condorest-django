@@ -14,6 +14,7 @@ def load_data(apps, schema_editor):
     Account(name="Deposits", type="revenue").save()
     Account(name="Administrative", type="expense").save()
     Account(name="Purchases", type="expense").save()
+    Account(name="Balance", type="equity").save()
 
 
 def remove_data(apps, schema_editor):
