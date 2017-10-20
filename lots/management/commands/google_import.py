@@ -7,7 +7,7 @@ from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 
 from expense.models import ExpenseNote
-from ledger.models import Account
+from ledger.models import Account, Entry
 from lots.models import Lot, LotType, Contact
 from revenue.models import Receipt, Fee
 
@@ -36,10 +36,17 @@ class Command(BaseCommand):
         raise CommandError('Your import option does not exist')
 
     def import_mantenimiento(self, client):
+        Entry.objects.all().delete()
         Receipt.objects.all().delete()
         ExpenseNote.objects.all().delete()
 
-        sheets = ('may-16', 'ago-16', 'sep-16', 'oct-16', 'nov-16', 'dic-16',) # 'ene-17', 'feb-17', 'mar-17', 'abr-17', 'may-17', 'jun-17', 'jul-17', 'ago-17', 'sep-17',)
+        sheets = ('may-16', 'jun-16', 'jul-16', 'ago-16', 'sep-16', 'oct-16', 'nov-16', 'dic-16',) # 'ene-17', 'feb-17', 'mar-17', 'abr-17', 'may-17', 'jun-17', 'jul-17', 'ago-17', 'sep-17',)
+
+        Entry(details='Saldo inicial',
+              amount=Decimal('5110.62'),
+              debit_account=Account.objects.get(name='Cash'),
+              credit_account=Account.objects.get(name='Balance'),
+              date='2016-05-01').save()
 
         for sheet_name in sheets:
             sheet = client.open("R/ I-E MANTENIMIENTO.xlsx").worksheet(sheet_name)
@@ -62,21 +69,31 @@ class Command(BaseCommand):
                 amount = Decimal(row['Ingreso'].strip('$').replace(',', ''))
                 if amount == income:
                     break
-                item, created = Receipt.objects.get_or_create(
-                    number=row['Folio'],
-                    defaults={
-                        'number': row['Folio'],
-                        'amount': amount,
-                        'date': current_date,
-                        'debit_account': cash,
-                        'contact': owner,
-                        'details': '''Lote: %(Clave)s, Cuotas: %(Cuotas)s
+                if row['Folio']:
+                    item, created = Receipt.objects.get_or_create(
+                        number=row['Folio'],
+                        defaults={
+                            'number': row['Folio'],
+                            'amount': amount,
+                            'date': current_date,
+                            'debit_account': cash,
+                            'contact': owner,
+                            'details': '''Lote: %(Clave)s, Cuotas: %(Cuotas)s
+                            Nombre: %(Nombre)s''' % row,
+                        }
+                    )
+                    if not created:
+                        raise Exception('Warning, should not be an old receipt ' + row['Folio'])
+                else:
+                    item = Receipt(
+                        amount=amount,
+                        date=current_date,
+                        debit_account=cash,
+                        contact=owner,
+                        details='''Lote: %(Clave)s, Cuotas: %(Cuotas)s
                         Nombre: %(Nombre)s''' % row,
-                    }
-                )
-                if not created:
-                    raise Exception('Warning, should not be an old receipt')
-                item.save()
+                    )
+                    item.save()
                 income += amount
             elif row['Egreso'] != '':
                 amount = Decimal(row['Egreso'].strip('$').replace(',', ''))
