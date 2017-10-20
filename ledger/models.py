@@ -59,6 +59,9 @@ class Entry(models.Model):
             expensenote.save()
         super().delete(using=using, keep_parents=keep_parents)
 
+    def details_summary(self):
+        return self.details.split('\n', 1)[0]
+
 
 class IncomeExpenseNote(models.Model):
     date = models.DateField(db_index=True)
@@ -106,3 +109,6 @@ class IncomeExpenseNote(models.Model):
         if self.entry is not None:
             self.entry.delete()
         super().delete(using=using, keep_parents=keep_parents)
+
+    def details_summary(self):
+        return self.details.split('\n', 1)[0]
