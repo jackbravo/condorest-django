@@ -59,6 +59,7 @@ class Command(BaseCommand):
     def _import_cash_account_records(self, records):
         administrative = Account.objects.get(name='Administrative')
         cash = Account.objects.get(name='Cash')
+        bank = Account.objects.get(name='Bank')
 
         income = Decimal('0.00')
         expense = Decimal('0.00')
@@ -115,6 +116,23 @@ class Command(BaseCommand):
                 )
                 item.save()
                 expense += amount
+            elif row['Banco'] != '' and row['Folio'] != '':
+                amount = self.parse_decimal(row['Banco'])
+                item, created = Receipt.objects.get_or_create(
+                    number=row['Folio'],
+                    defaults={
+                        'number': row['Folio'],
+                        'amount': amount,
+                        'date': current_date,
+                        'debit_account': bank,
+                        'contact': owner,
+                        'details': '''Lote: %(Clave)s, Cuotas: %(Cuotas)s
+                            Nombre: %(Nombre)s''' % row,
+                    }
+                )
+                if not created:
+                    print('Error with old receipt', row)
+                    raise Exception('Warning, should not be an old receipt ' + row['Folio'])
 
     def import_contacts(self, client):
         Contact.objects.all().delete()
