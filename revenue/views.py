@@ -23,7 +23,7 @@ def index(request):
           ORDER BY 1, 2
         $$, $$
           SELECT m::date
-          FROM generate_series(timestamp '%s-01-01', timestamp '%s-12-01', '1 month') m
+          FROM generate_series(timestamp '2017-01-01', timestamp '2017-12-01', '1 month') m
         $$) as (
           lot varchar,
           "jan" numeric(13,2),
@@ -39,7 +39,7 @@ def index(request):
           "nov" numeric(13,2),
           "dec" numeric(13,2))'''
 
-        cursor.execute(sql, [year, year])
+        cursor.execute(sql)
         data = cursor.fetchall()
 
         return render(request, 'revenue/index.html', context={
