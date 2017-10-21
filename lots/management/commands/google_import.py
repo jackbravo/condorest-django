@@ -9,7 +9,7 @@ from datetime import datetime
 from expense.models import ExpenseNote
 from ledger.models import Account, Entry
 from lots.models import Lot, LotType, Contact
-from revenue.models import Receipt, Fee
+from revenue.models import Receipt, Fee, FeeLine
 
 
 class Command(BaseCommand):
@@ -27,6 +27,7 @@ class Command(BaseCommand):
         types = {
             'cash_account': self.import_cash_account,
             'contacts': self.import_contacts,
+            'fees': self.import_fees,
         }
 
         for type in options['type']:
@@ -34,6 +35,83 @@ class Command(BaseCommand):
 
     def error_handler(self, client):
         raise CommandError('Your import option does not exist')
+
+    def import_fees(self, client):
+        Fee.objects.all().delete()
+        FeeLine.objects.all().delete()
+        Receipt.objects.filter(details__contains='Import').delete()
+
+        file = client.open("R/ LOTES 2016.xlsx")
+        for year in range(2009, 2018):
+            sheet = file.worksheet(str(year))
+            records = sheet.get_all_values()
+            #handle = open(str(year) + '.v2.json')
+            #records = json.load(handle)
+            #handle.close()
+            self._import_fees_records(year, records)
+
+        print("Finished importing fees")
+
+    def _import_fees_records(self, year, records):
+        months = 12 if year != 2009 else 7
+        first_receipt_cell = 6 if year != 2009 else 16
+        start_date = datetime(year=year, month=13-months, day=1)
+        min_receipt_number = '1351'
+        cash = Account.objects.get(name='Cash')
+        for row in records[3:]:
+            if not row[4]:
+                break
+            lot = Lot.objects.get(name='M' + row[4] + '-L' + row[5])
+            lot.default_fee = self.parse_decimal(row[34]) / months
+            lot.save()
+
+            if not lot.default_fee:
+                continue
+
+            fee_list = []
+            feeline_list = []
+            receipt_numbers = []
+            has_amount_without_receipt = False
+            receipts_below_min = {}
+            year_receipt = None
+            # an enumeration with month number as key and receipt_cell number as value
+            my_enum = enumerate(range(first_receipt_cell, first_receipt_cell + (months*2), 2), start=start_date.month)
+            for month, receipt_cell in my_enum:
+                amount_cell = receipt_cell+1
+                date = datetime(year=year, month=month, day=1)
+                amount = self.parse_decimal(row[amount_cell])
+                if not amount:
+                    fee_list.append(Fee(lot=lot, date=date, amount=lot.default_fee))
+                else:
+                    feeline_list.append(FeeLine(lot=lot, date=date, amount=amount))
+                    if row[receipt_cell] != '':
+                        feeline_list[-1].receipt_number = row[receipt_cell] # placeholder
+                        if int(row[receipt_cell]) < int(min_receipt_number) and row[receipt_cell] not in receipts_below_min:
+                            receipt = Receipt(contact=lot.owner, date=date, save_in_ledger=False, amount=Decimal('0.00'),
+                                                   number=row[receipt_cell], debit_account=cash, details='Import')
+                            receipt.save()
+                            receipts_below_min[receipt.number] = receipt.id
+                        else:
+                            receipt_numbers.append(row[receipt_cell])
+                    else:
+                        has_amount_without_receipt = True
+
+            if fee_list:
+                Fee.objects.bulk_create(fee_list)
+
+            if has_amount_without_receipt:
+                year_receipt = Receipt(contact=lot.owner, date=start_date, save_in_ledger=False, amount=Decimal('0.00'),
+                                       details='Import: Pago de cuota sin recibo', debit_account=cash)
+                year_receipt.save()
+
+            ids_dict = dict(list(Receipt.objects.filter(number__in=receipt_numbers).values_list('number', 'id')))
+            ids_dict.update(receipts_below_min)
+            for feeline in feeline_list:
+                if hasattr(feeline, 'receipt_number'): feeline.receipt_id = ids_dict[feeline.receipt_number]
+                else: feeline.receipt_id = year_receipt.id
+            FeeLine.objects.bulk_create(feeline_list)
+
+        print("Finished importing fees for year", year)
 
     def import_cash_account(self, client):
         Entry.objects.all().delete()
