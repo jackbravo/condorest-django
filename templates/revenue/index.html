@@ -25,7 +25,11 @@
 {% for row in data %}
     <tr>
     {% for item in row %}
-        <td>{{ item }}</td>
+        {% if forloop.first %}
+            <th class="">{{ item }}</th>
+        {% else %}
+            <td class="text-right {% if item > 0 %}table-success {% else %}table-danger {% endif %}">{{ item }}</td>
+        {% endif %}
     {% endfor %}
     </tr>
 {% endfor %}
