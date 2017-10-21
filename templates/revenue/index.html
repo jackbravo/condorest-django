@@ -26,7 +26,7 @@
     <tr>
     {% for item in row %}
         {% if forloop.first %}
-            <th class="">{{ item }}</th>
+            <th class=""><nobr>{{ item }}</nobr></th>
         {% else %}
             <td class="text-right {% if item > 0 %}table-success {% else %}table-danger {% endif %}">{{ item }}</td>
         {% endif %}
