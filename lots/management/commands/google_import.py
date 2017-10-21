@@ -70,12 +70,12 @@ class Command(BaseCommand):
                 print('Error while parsing date with row', row)
             owner = Contact.objects.filter(owns_lots__name=row['Clave']).first() if row['Clave'] != '' else None
             if row['Ingreso'] != '' and row['Egreso'] != '':
-                ingreso = Decimal(row['Ingreso'].strip('$').replace(',', ''))
-                egreso = Decimal(row['Egreso'].strip('$').replace(',', ''))
+                ingreso = self.parse_decimal(row['Ingreso'])
+                egreso = self.parse_decimal(row['Egreso'])
                 if ingreso == income and egreso == expense:
                     break
             if row['Ingreso'] != '':
-                amount = Decimal(row['Ingreso'].strip('$').replace(',', ''))
+                amount = self.parse_decimal(row['Ingreso'])
                 if row['Folio']:
                     item, created = Receipt.objects.get_or_create(
                         number=row['Folio'],
@@ -104,7 +104,7 @@ class Command(BaseCommand):
                     item.save()
                 income += amount
             elif row['Egreso'] != '':
-                amount = Decimal(row['Egreso'].strip('$').replace(',', ''))
+                amount = self.parse_decimal(row['Egreso'])
                 item = ExpenseNote(
                     number=row['Folio'],
                     amount=amount,
@@ -178,3 +178,7 @@ class Command(BaseCommand):
                 lot.contacts.add(contact)
 
         print("Finished importing contacts")
+
+    def parse_decimal(self, str):
+        if str: return Decimal(str.strip('$').replace(',', ''))
+        else: return Decimal('0.00')
