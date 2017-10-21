@@ -33,3 +33,17 @@ class Fee(models.Model):
 
     def __str__(self):
         return date(self.date, "Y/m") + ' ' + self.lot.name + ' ' + str(self.amount)
+
+    @staticmethod
+    def create_fees(ids, start_date, end_date):
+        from django.db import connection
+        with connection.cursor() as cursor:
+            sql = '''INSERT INTO revenue_fee ("date", amount, lot_id)
+              SELECT t::date, default_fee, id
+              FROM lots_lot
+              CROSS JOIN generate_series(timestamp %s, timestamp %s, '1 month') t
+              WHERE id IN %s
+            '''
+
+            cursor.execute(sql, [start_date, end_date, ids])
+            return cursor.rowcount

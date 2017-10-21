@@ -6,6 +6,7 @@ from import_export.admin import ImportExportModelAdmin
 from import_export import resources
 
 from lots.forms import CreateFeesForm, UpdateFeeForm
+from revenue.models import Fee
 from .models import Lot, Contact, LotType
 
 
@@ -39,7 +40,8 @@ class LotAdmin(ImportExportModelAdmin):
             form = CreateFeesForm(request.POST)
 
             if form.is_valid():
-                count = form.create_fees(queryset)
+                ids = tuple(queryset.values_list('id', flat=True))
+                count = Fee.create_fees(ids, form.cleaned_data['start_date'], form.cleaned_data['end_date'])
                 self.message_user(
                     request,
                     "Created {} fees".format(count)

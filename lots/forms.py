@@ -25,17 +25,3 @@ class CreateFeesForm(forms.Form):
     def clean(self):
         if self.cleaned_data['start_date'] > self.cleaned_data['end_date']:
             raise ValidationError(_("Start date must be before the end date"))
-
-    def create_fees(self, queryset = None):
-        ids = tuple(queryset.values_list('id', flat=True))
-        from django.db import connection
-        with connection.cursor() as cursor:
-            sql = '''INSERT INTO revenue_fee ("date", amount, lot_id)
-              SELECT t::date, default_fee, id
-              FROM lots_lot
-              CROSS JOIN generate_series(timestamp %s, timestamp %s, '1 month') t
-              WHERE id IN %s
-            '''
-
-            cursor.execute(sql, [self.cleaned_data['start_date'], self.cleaned_data['end_date'], ids])
-            return cursor.rowcount
