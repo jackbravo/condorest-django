@@ -48,8 +48,9 @@ class Command(BaseCommand):
               credit_account=Account.objects.get(name='Balance'),
               date='2016-05-01').save()
 
+        file = client.open("R/ I-E MANTENIMIENTO.xlsx")
         for sheet_name in sheets:
-            sheet = client.open("R/ I-E MANTENIMIENTO.xlsx").worksheet(sheet_name)
+            sheet = file.worksheet(sheet_name)
             records = sheet.get_all_records(head=5)
             self._import_cash_account_records(records)
             print('Finished:', sheet_name)
