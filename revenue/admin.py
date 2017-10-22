@@ -44,6 +44,7 @@ class ReceiptAdmin(admin.ModelAdmin):
     fields = ('date', 'contact', 'number', 'details', 'debit_account', 'credit_account', 'amount', 'save_in_ledger')
     inlines = [FeeLinesInline]
     search_fields = ['number', 'details']
+    ordering = ['-date']
 
 
 class FeeAdmin(admin.ModelAdmin):
