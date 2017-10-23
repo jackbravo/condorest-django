@@ -52,7 +52,7 @@ def index(request):
 
 def create_receipt(request, lot):
     lot = get_object_or_404(Lot, name=lot)
-    receipts = Receipt.objects.filter(contact=lot.owner)
+    receipts = Receipt.objects.filter(contact=lot.owner).order_by('-date', '-id')
     fees = Fee.objects.filter(lot=lot)
 
     balance = Decimal('0.00')
