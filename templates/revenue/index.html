@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load humanize %}
 
 {% block content %}
 <h1>Revenue</h1>
@@ -28,7 +29,7 @@
         {% if forloop.first %}
             <th class=""><nobr>{{ item }}</nobr></th>
         {% else %}
-            <td class="text-right {% if item > 0 %}table-success {% else %}table-danger {% endif %}">{{ item }}</td>
+            <td class="text-right {% if item > 0 %}table-success {% else %}table-danger {% endif %}">{{ item|intcomma }}</td>
         {% endif %}
     {% endfor %}
     </tr>
