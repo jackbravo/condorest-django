@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Lots</h1>
+
+<table class="table table-bordered table-hover table-sm">
+    <thead>
+        <tr>
+            <th>Lot</th>
+            <th>Contacts</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for lot in lots %}
+        <tr>
+            <td>
+                <h4>{{ lot.name }} <small>{{ lot.address }}</small></h4>
+                <p>{{ lot.owner.name }} ({{ lot.owner.phone_number }})</p>
+            </td>
+            <td>
+            {% for contact in lot.contacts.all %}
+                <p>{{ contact.name }} ({{ contact.phone_number }})</p>
+            {% endfor %}
+            </td>
+            <td>
+                <a class="btn btn-primary" href="{% url 'revenue:create-receipt' lot.name %}">Create receipt</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="pagination">
+<span class="step-links">
+    {% if lots.has_previous %}
+        <a href="?page={{ lots.previous_page_number }}">previous</a>
+    {% endif %}
+
+    <span class="current">
+        Page {{ lots.number }} of {{ lots.paginator.num_pages }}.
+    </span>
+
+    {% if lots.has_next %}
+        <a href="?page={{ lots.next_page_number }}">next</a>
+    {% endif %}
+</span>
+</div>
+{% endblock %}

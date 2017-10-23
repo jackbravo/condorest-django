@@ -7,7 +7,7 @@ $(document).ready(function() {
             return false;
         },
         select: function( event, ui ) {
-            window.location.href = "/lots/" + ui.item.name;
+            window.location.href = "/revenue/receipt/add/" + ui.item.name;
             return false;
         }
     }).autocomplete("instance")._renderItem = function(ul, item) {

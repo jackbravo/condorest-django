@@ -4,4 +4,5 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
+    url(r'^receipt/add/(?P<lot>[\w-]+)/$', views.create_receipt, name='create-receipt'),
 ]

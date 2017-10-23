@@ -30,7 +30,7 @@ class LotAdmin(ImportExportModelAdmin):
     list_display = ['name', 'address', 'owner', 'default_fee', 'lot_type']
     list_filter = ['lot_type']
     list_select_related = ['owner', 'lot_type']
-    search_fields = ['name', 'address']
+    search_fields = ['name', 'address', 'owner__name']
     resource_class = LotResource
 
     actions = ['create_fees', 'update_fee']

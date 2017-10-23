@@ -45,3 +45,6 @@ def index(request):
         return render(request, 'revenue/index.html', context={
             'data': data,
         })
+
+def create_receipt(request, lot):
+    pass

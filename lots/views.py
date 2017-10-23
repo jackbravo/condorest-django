@@ -1,5 +1,6 @@
 import json
 
+from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render
 from django.db.models import Q
 from django.http import HttpResponse
@@ -8,10 +9,22 @@ from lots.models import Lot
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the lots index.")
+    q = request.GET.get('q', '')
+    queryset = Lot.objects.all().select_related('owner')
+    if q:
+        queryset = queryset.filter(Q(name__icontains=q) | Q(address__icontains=q) | Q(owner__name__icontains=q))
+    queryset = queryset.prefetch_related('contacts')
 
-def search(request):
-    pass
+    paginator = Paginator(queryset, 50)
+    page = request.GET.get('page', 1)
+    try:
+        lots = paginator.page(page)
+    except EmptyPage:
+        lots = paginator.page(paginator.num_pages)
+
+    return render(request, 'lots/index.html', context={
+        'lots': lots,
+    })
 
 def search_ajax(request):
     q = request.GET.get('term')
