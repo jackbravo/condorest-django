@@ -1,6 +1,10 @@
 from datetime import datetime
 
-from django.shortcuts import render
+from decimal import Decimal
+from django.shortcuts import render, get_object_or_404
+
+from lots.models import Lot
+from revenue.models import Receipt, Fee
 
 
 def index(request):
@@ -47,4 +51,18 @@ def index(request):
         })
 
 def create_receipt(request, lot):
-    pass
+    lot = get_object_or_404(Lot, name=lot)
+    receipts = Receipt.objects.filter(contact=lot.owner)
+    fees = Fee.objects.filter(lot=lot)
+
+    balance = Decimal('0.00')
+    for fee in fees:
+        fee.balance = balance
+        balance += fee.amount
+
+    return render(request, 'revenue/create_receipt.html', context={
+        'lot': lot,
+        'receipts': receipts,
+        'fees': fees,
+        'balance': balance
+    })
