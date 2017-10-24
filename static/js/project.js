@@ -16,3 +16,7 @@ $(document).ready(function() {
             .appendTo( ul );
     };
 });
+
+function parse_decimal(str) {
+    return new BigNumber(str.replace(/[^0-9\.]+/g,""))
+}
