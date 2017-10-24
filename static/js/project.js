@@ -18,6 +18,7 @@ $(document).ready(function() {
 });
 
 function parse_decimal(str) {
+    BigNumber.config({ DECIMAL_PLACES: 2 });
     try {
         return new BigNumber(str.replace(/[^0-9\.]+/g,""));
     } catch (e) {

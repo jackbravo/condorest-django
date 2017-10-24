@@ -14,6 +14,7 @@
             <tr>
                 <th>Date</th>
                 <th>Fee</th>
+                <th>D.</th>
                 <th>Payment</th>
                 <th>Balance</th>
             </tr>
@@ -23,6 +24,7 @@
             <tr class="fee-row">
                 <td><samp class="fee-date">{{ fee.date|date:"b Y" }}</samp></td>
                 <td class="text-right"><samp class="fee-amount">{{ fee.amount|intcomma }}</samp></td>
+                <td class="text-right"><samp class="fee-discount"></samp></td>
                 <td class="text-right"><samp class="fee-payment"></samp></td>
                 <td class="text-right"><samp class="fee-balance">{{ fee.balance|intcomma }}</samp></td>
             </tr>
@@ -32,8 +34,15 @@
             <tr>
                 <th><samp>Total</samp></th>
                 <th class="text-right"><samp class="fee-amount-total">{{ balance|intcomma }}</samp></th>
-                <th class=""><samp class="fee-payment-total"><input class="text-right" title="amount" style="width: 120px"></samp></th>
+                <th class="text-right"><samp class="fee-discount-total"></samp></th>
+                <th class=""><samp class="fee-payment-total"><input class="text-right" title="amount" style="width: 110px"></samp></th>
                 <th class="text-right"><samp class="fee-balance-total">{{ balance|intcomma }}</samp></th>
+            </tr>
+            <tr class="discount-row">
+                <th colspan="2"><samp>Discount</samp></th>
+                <th class="text-right"><samp class=""></samp></th>
+                <th class="text-right"><samp class="fee-discount"><input class="text-right" title="discount" style="width: 110px"></samp></th>
+                <th class="text-right"><samp class="fee-discount-rate"><input class="text-right" title="discount-rate" style="width: 50px">%</samp></th>
             </tr>
         </tfoot>
         </table>
