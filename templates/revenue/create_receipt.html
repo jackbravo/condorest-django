@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load humanize %}
+{% load static humanize %}
 
 {% block content %}
 <h1>{{ lot.name }} <small>{{ lot.address }}</small></h1>
@@ -51,4 +51,8 @@
         {% endfor %}
     </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+    <script src="{% static 'js/create_receipt.js' %}"></script>
 {% endblock %}
