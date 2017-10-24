@@ -57,8 +57,8 @@ def create_receipt(request, lot):
 
     balance = Decimal('0.00')
     for fee in fees:
-        fee.balance = balance
         balance += fee.amount
+        fee.balance = balance
 
     return render(request, 'revenue/create_receipt.html', context={
         'lot': lot,
