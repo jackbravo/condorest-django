@@ -18,5 +18,9 @@ $(document).ready(function() {
 });
 
 function parse_decimal(str) {
-    return str !== '' ? new BigNumber(str.replace(/[^0-9\.]+/g,"")) : new BigNumber('0.00');
+    try {
+        return new BigNumber(str.replace(/[^0-9\.]+/g,""));
+    } catch (e) {
+        return new BigNumber('0.00');
+    }
 }
