@@ -1,11 +1,9 @@
-BigNumber.config({ DECIMAL_PLACES: 2 });
 
 $(document).ready(function() {
     $(".fee-payment-total input").blur(function () {
         var payment_total = parse_decimal(this.value);
         var discount_rate = parse_decimal($('.fee-discount-rate input').val()).dividedBy(100);
-        this.value = payment_total.toString();
-        console.log(discount_rate.toString());
+        this.value = payment_total.toFormat(2);
 
         var balance = new BigNumber('0.00');
         var discount_total = new BigNumber('0.00');
@@ -14,18 +12,18 @@ $(document).ready(function() {
             if (!discount_rate.isZero()) {
                 month_amount = month_amount.minus(discount_rate.times(month_amount));
                 discount_total = discount_total.add(month_amount);
-                $('.fee-discount', this).text(month_amount.toString());
+                $('.fee-discount', this).text(month_amount.toFormat(2));
             } else {
                 $('.fee-discount', this).text('');
             }
 
             var payment = payment_total.greaterThanOrEqualTo(month_amount) ? month_amount : payment_total;
             if (payment.equals(month_amount)) {
-                $(this).addClass('table-success');
+                $(this).addClass('table-success').removeClass('table-warning');
             } else if (payment.isZero()) {
                 $(this).removeClass('table-success table-warning');
             } else {
-                $(this).addClass('table-warning');
+                $(this).addClass('table-warning').removeClass('table-success');
                 if (!discount_rate.isZero()) {
                     $('.discount-row').addClass('table-danger');
                 } else {
@@ -36,11 +34,11 @@ $(document).ready(function() {
             payment_total = payment_total.minus(payment);
             balance = balance.add(month_amount).minus(payment);
 
-            $('.fee-balance', this).text(balance.toString());
-            $('.fee-payment', this).text(payment.toString());
+            $('.fee-balance', this).text(balance.toFormat(2));
+            $('.fee-payment', this).text(payment.toFormat(2));
         });
-        $('.fee-balance-total').text(balance.toString());
-        $('.fee-discount-total').text(discount_total.toString());
+        $('.fee-balance-total').text(balance.toFormat(2));
+        $('.fee-discount-total').text(discount_total.toFormat(2));
     });
 
     $(".fee-discount-rate input").blur(function () {
@@ -51,7 +49,7 @@ $(document).ready(function() {
             this.value = discount_rate.toFormat(0);
             discount_rate = parse_decimal(this.value).dividedBy(100);
             var payment_and_discount = payment_total.dividedBy(discount_rate.minus(1).negated());
-            $('.fee-discount input').val(payment_and_discount.minus(payment_total).toString());
+            $('.fee-discount input').val(payment_and_discount.minus(payment_total).toFormat(2));
             payment_total_input.blur();
         }
     });
