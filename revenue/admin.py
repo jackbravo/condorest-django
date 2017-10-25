@@ -16,7 +16,8 @@ class FeeLinesInlineFormSet(forms.BaseInlineFormSet):
                 continue # there are other errors in the form or the item was deleted
             total += form.cleaned_data.get('amount', 0)
 
-        self.instance.amount = total
+        if (total != self.instance.amount):
+            raise ValidationError(_("FeeLine amounts must add up to the receipt amount."))
 
 
 class FeeLineForm(forms.ModelForm):
@@ -40,7 +41,6 @@ class FeeLinesInline(admin.TabularInline):
 class ReceiptAdmin(admin.ModelAdmin):
     list_display = ['date', 'number', 'save_in_ledger', 'details_summary', 'contact', 'debit_account', 'credit_account', 'amount']
     list_filter = ['date', 'save_in_ledger']
-    readonly_fields = ['amount']
     fields = ('date', 'contact', 'number', 'details', 'debit_account', 'credit_account', 'amount', 'save_in_ledger')
     inlines = [FeeLinesInline]
     search_fields = ['number', 'details']
