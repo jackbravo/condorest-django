@@ -9,7 +9,8 @@ $(document).ready(function() {
         // reset colors
         var rows = $('.fee-row');
         rows.removeClass('table-warning table-success');
-        $('.discount-row').removeClass('bg-danger');
+        $('.discount-row input').removeClass('is-invalid');
+        $('.discount-row .invalid-feedback').hide();
 
         var balance = new BigNumber('0.00');
         var payment_total = new BigNumber('0.00');
@@ -38,7 +39,8 @@ $(document).ready(function() {
             } else if (!payment.isZero()) {
                 $(this).addClass('table-warning');
                 if (!month_discount.isZero()) {
-                    $('.discount-row').addClass('bg-danger');
+                    $('.discount-row input').addClass('is-invalid');
+                    $('.discount-row .invalid-feedback').show();
                 }
             }
 
@@ -48,7 +50,7 @@ $(document).ready(function() {
         });
         $('.fee-balance-total').text(balance.toFormat(2));
         $('.fee-payment-total').text(payment_total.toFormat(2));
-    });
+    }).blur();
 
     $("#id_discount_rate").blur(function () {
         var discount_rate = parse_decimal(this.value);
