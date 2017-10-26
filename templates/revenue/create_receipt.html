@@ -36,7 +36,9 @@
                 <th><samp>Total</samp></th>
                 <th class="text-right"><samp class="fee-amount-total">{{ balance|intcomma }}</samp></th>
                 <th class="text-right"><samp class="fee-discount-total"></samp></th>
-                <th class=""><samp class="fee-payment-total"><input class="text-right" title="amount" style="width: 110px"></samp></th>
+                <th class="text-right"><samp class="fee-payment-total">
+                    <input class="text-right" title="amount" name="amount" style="width: 110px">
+                </samp></th>
                 <th class="text-right"><samp class="fee-balance-total">{{ balance|intcomma }}</samp></th>
             </tr>
             <tr class="discount-row">
