@@ -1,5 +1,6 @@
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import ugettext_lazy as _
 
 from lots.models import Contact
@@ -64,7 +65,7 @@ class Entry(models.Model):
 
 
 class IncomeExpenseNote(models.Model):
-    date = models.DateField(db_index=True)
+    date = models.DateField(db_index=True, default=timezone.now)
     number = models.CharField(max_length=254, null=True, blank=True, db_index=True)
     details = models.CharField(max_length=254, blank=True)
     amount = models.DecimalField(max_digits=13, decimal_places=2)

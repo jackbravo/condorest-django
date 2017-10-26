@@ -6,6 +6,7 @@ from django.db import migrations, models
 import django.db.models.deletion
 import django.utils.timezone
 import month.models
+from django.utils import timezone
 
 
 class Migration(migrations.Migration):
@@ -43,7 +44,7 @@ class Migration(migrations.Migration):
             name='Receipt',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('date', models.DateField(db_index=True)),
+                ('date', models.DateField(db_index=True, default=timezone.now)),
                 ('number', models.CharField(blank=True, max_length=254, db_index=True, null=True)),
                 ('details', models.CharField(blank=True, max_length=254)),
                 ('amount', models.DecimalField(decimal_places=2, max_digits=13)),
