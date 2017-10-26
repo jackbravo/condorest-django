@@ -70,4 +70,6 @@ $(document).ready(function() {
         }
         $(".fee-payment-total input").blur();
     });
+
+    $('#id_date').datepicker({dateFormat: "yy-mm-dd"});
 });
