@@ -7,7 +7,6 @@
 <div class="row">
 
     <div class="col-md-8">
-    <form method="post">
         <h4>Pending fees</h4>
         <!-- fees -->
         <table id="fees" class="table table-striped table-bordered table-hover table-sm">
@@ -15,7 +14,7 @@
             <tr>
                 <th>Date</th>
                 <th>Fee</th>
-                <th>D.</th>
+                <th>Discount</th>
                 <th>Payment</th>
                 <th>Balance</th>
             </tr>
@@ -36,24 +35,23 @@
                 <th><samp>Total</samp></th>
                 <th class="text-right"><samp class="fee-amount-total">{{ balance|intcomma }}</samp></th>
                 <th class="text-right"><samp class="fee-discount-total"></samp></th>
-                <th class="text-right"><samp class="fee-payment-total">
-                    <input class="text-right" title="amount" name="amount" style="width: 110px">
-                </samp></th>
+                <th class="text-right"><samp class="fee-payment-total"></samp></th>
                 <th class="text-right"><samp class="fee-balance-total">{{ balance|intcomma }}</samp></th>
-            </tr>
-            <tr class="discount-row">
-                <th colspan="5" class="text-center">
-                    <samp>Discount:</samp>
-                    <samp class="fee-discount"><input class="text-right" title="discount" name="discount" style="width: 110px"></samp>
-                    or
-                    <samp class="fee-discount-rate"><input class="text-right" title="discount-rate" name="discount_rate" style="width: 50px">%</samp>
-                </th>
             </tr>
         </tfoot>
         </table>
 
+        <form method="post">
         {% bootstrap_form_errors form %}
         {% csrf_token %}
+        {% bootstrap_field form.amount form_group_class="form-group font-weight-bold lead" %}
+        <div class="discount-row form-group row">
+            {% bootstrap_field form.discount form_group_class="col" %}
+            <div class="col">
+                <label class="control-label" for="id_discount">Or discount rate</label>
+                <input class="form-control" id="id_discount_rate" name="discount_rate" title="Discount rate" type="number">
+            </div>
+        </div>
         <div class="form-group row">
             {% bootstrap_field form.date form_group_class="col" %}
             {% bootstrap_field form.number form_group_class="col" %}
@@ -69,7 +67,7 @@
         {% buttons %}
             <button type="submit" class="btn btn-primary">Submit</button>
         {% endbuttons %}
-    </form>
+        </form>
     </div>
 
     <div class="col-md-4">

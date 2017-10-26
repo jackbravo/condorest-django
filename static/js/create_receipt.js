@@ -1,10 +1,10 @@
 
 $(document).ready(function() {
-    $(".fee-payment-total input").blur(function () {
+    $("#id_amount").blur(function () {
         var payment_total = parse_decimal(this.value);
-        var discount_rate = parse_decimal($('.fee-discount-rate input').val()).dividedBy(100);
-        var discount = parse_decimal($('.fee-discount input').val());
-        this.value = payment_total.toFormat(2);
+        var discount_rate = parse_decimal($('#id_discount_rate').val()).dividedBy(100);
+        var discount = parse_decimal($('#id_discount').val());
+        this.value = payment_total.toFixed(2);
 
         var balance = new BigNumber('0.00');
         $(".fee-row").each(function () {
@@ -38,9 +38,9 @@ $(document).ready(function() {
             } else {
                 $(this).addClass('table-warning').removeClass('table-success');
                 if (!discount_rate.isZero() || !month_discount.isZero()) {
-                    $('.discount-row').addClass('table-danger');
+                    $('.discount-row').addClass('bg-danger');
                 } else {
-                    $('.discount-row').removeClass('table-danger');
+                    $('.discount-row').removeClass('bg-danger');
                 }
             }
 
@@ -53,22 +53,22 @@ $(document).ready(function() {
         $('.fee-balance-total').text(balance.toFormat(2));
     });
 
-    $(".fee-discount-rate input").blur(function () {
+    $("#id_discount_rate").blur(function () {
         var discount_rate = parse_decimal(this.value);
-        this.value = discount_rate.toFormat(0);
+        this.value = discount_rate.toFixed(0);
         if (!discount_rate.isZero()) {
-            $('.fee-discount input').val('');
+            $('#id_discount').val('');
         }
-        $(".fee-payment-total input").blur();
+        $("#id_amount").blur();
     });
 
-    $(".fee-discount input").blur(function () {
+    $("#id_discount").blur(function () {
         var discount = parse_decimal(this.value);
-        this.value = discount.toFormat(2);
+        this.value = discount.toFixed(2);
         if (!discount.isZero()) {
-            $('.fee-discount-rate input').val('');
+            $('#id_discount_rate').val('');
         }
-        $(".fee-payment-total input").blur();
+        $("#id_amount").blur();
     });
 
     $('#id_date').datepicker({dateFormat: "yy-mm-dd"});

@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db import models
 from django.template.defaultfilters import date
 from django.utils import timezone
@@ -14,6 +15,12 @@ class Receipt(IncomeExpenseNote):
         related_name='receipt_credit_accounts',
         default=3 # lambda: Account.objects.get(name='Fees')
     )
+    discount = models.DecimalField(blank=True, max_digits=13, decimal_places=2)
+    discount_rate = models.IntegerField(blank=True)
+
+    def clean(self):
+        if self.discount and self.discount_rate:
+            raise ValidationError(_('Use only discount amount or discount rate, not both.'))
 
 
 class FeeLine(models.Model):
