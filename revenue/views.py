@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.shortcuts import render, get_object_or_404
 
 from lots.models import Lot
+from revenue.forms import ReceiptForm
 from revenue.models import Receipt, Fee
 
 
@@ -54,6 +55,7 @@ def create_receipt(request, lot):
     lot = get_object_or_404(Lot, name=lot)
     receipts = Receipt.objects.filter(contact=lot.owner).order_by('-date', '-id')
     fees = Fee.objects.filter(lot=lot)
+    form = ReceiptForm()
 
     balance = Decimal('0.00')
     for fee in fees:
@@ -64,5 +66,6 @@ def create_receipt(request, lot):
         'lot': lot,
         'receipts': receipts,
         'fees': fees,
-        'balance': balance
+        'balance': balance,
+        'form': form,
     })

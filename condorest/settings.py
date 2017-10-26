@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'month',
     'import_export',
     'django_extensions',
-    'crispy_forms',
+    'bootstrap4',
     'debug_toolbar',
 ]
 

@@ -1,4 +1,4 @@
-django-crispy-forms
+django-bootstrap4
 django-import-export
 django-debug-toolbar
 psycopg2
