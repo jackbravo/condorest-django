@@ -1,4 +1,5 @@
 django-bootstrap4
 django-import-export
 django-debug-toolbar
+django_select2
 psycopg2

@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'month',
     'import_export',
     'django_extensions',
+    'django_select2',
     'bootstrap4',
     'debug_toolbar',
 ]
