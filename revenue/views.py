@@ -1,6 +1,9 @@
 from datetime import datetime
 
 from decimal import Decimal
+
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
 from lots.models import Lot
@@ -65,6 +68,8 @@ def create_receipt(request, lot):
         form = ReceiptForm(request.POST, fees=fees, balance=balance, lot=lot)
         if form.is_valid():
             form.save()
+            messages.success(request, 'Receipt created.')
+            return HttpResponseRedirect(request.get_full_path())
     else:
         form = ReceiptForm(initial={
             'contact': lot.owner,

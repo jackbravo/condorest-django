@@ -55,9 +55,7 @@ class ReceiptForm(forms.ModelForm):
             available_discount = self.cleaned_data['discount']
             calculated_amount = Decimal('0.00')
 
-            self.fees_to_delete = []
-            self.fees_to_update = []
-            self.fee_lines = []
+            self._reset_lists()
             for fee in self.fees:
                 month_amount = fee.amount
                 month_discount = Decimal('0.00')
@@ -89,4 +87,18 @@ class ReceiptForm(forms.ModelForm):
                     self.fee_lines.append(fee_line)
 
     def save(self, commit=True):
-        pass
+        super().save(commit=commit)
+        for fee in self.fees_to_delete:
+            fee.delete()
+        for (fee, amount) in self.fees_to_update:
+            fee.amount = amount
+            fee.save()
+        for fee_line in self.fee_lines:
+            fee_line.receipt = self.instance
+        FeeLine.objects.bulk_create(self.fee_lines)
+        self._reset_lists()
+
+    def _reset_lists(self):
+        self.fees_to_delete = []
+        self.fees_to_update = []
+        self.fee_lines = []
