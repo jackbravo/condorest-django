@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.template.defaultfilters import date
@@ -26,6 +27,7 @@ class Receipt(IncomeExpenseNote):
 class FeeLine(models.Model):
     receipt = models.ForeignKey(Receipt, on_delete=models.CASCADE)
     amount = models.DecimalField(max_digits=13, decimal_places=2)
+    discount = models.DecimalField(max_digits=13, decimal_places=2, default=Decimal('0.00'))
     date = MonthField(db_index=True, default=timezone.now)
     lot = models.ForeignKey(Lot, on_delete=models.PROTECT)
 
