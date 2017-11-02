@@ -55,14 +55,20 @@ def create_receipt(request, lot):
     lot = get_object_or_404(Lot, name=lot)
     receipts = Receipt.objects.filter(contact=lot.owner).order_by('-date', '-id')
     fees = Fee.objects.filter(lot=lot)
-    form = ReceiptForm(initial={
-        'contact': lot.owner,
-    })
 
     balance = Decimal('0.00')
     for fee in fees:
         balance += fee.amount
         fee.balance = balance
+
+    if request.method == 'POST':
+        form = ReceiptForm(request.POST, fees=fees, balance=balance, lot=lot)
+        if form.is_valid():
+            form.save()
+    else:
+        form = ReceiptForm(initial={
+            'contact': lot.owner,
+        })
 
     return render(request, 'revenue/create_receipt.html', context={
         'lot': lot,
