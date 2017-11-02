@@ -9,8 +9,6 @@ $(document).ready(function() {
         // reset colors
         var rows = $('.fee-row');
         rows.removeClass('table-warning table-success');
-        $('.discount-row input').removeClass('is-invalid');
-        $('.discount-row .invalid-feedback').hide();
 
         var balance = new BigNumber('0.00');
         var payment_total = new BigNumber('0.00');
@@ -38,10 +36,6 @@ $(document).ready(function() {
                 $(this).addClass('table-success');
             } else if (!payment.isZero()) {
                 $(this).addClass('table-warning');
-                if (!month_discount.isZero()) {
-                    $('.discount-row input').addClass('is-invalid');
-                    $('.discount-row .invalid-feedback').show();
-                }
             }
 
             $('.fee-balance', this).text(balance.toFormat(2));
