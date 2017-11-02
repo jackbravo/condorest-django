@@ -13,9 +13,12 @@ class ReceiptForm(forms.ModelForm):
     fees = None
     balance = None
 
-    fees_to_delete = []
-    fees_to_update = []
-    fee_lines = []
+    """
+    this will be a list of tuples containing (fee: Fee, updated_amount: Decimal)
+    """
+    fees_to_update = None
+    fees_to_delete = None
+    fee_lines = None
 
     contact = forms.ModelChoiceField(
         queryset=Contact.objects.all(),
@@ -51,6 +54,10 @@ class ReceiptForm(forms.ModelForm):
             available_amount = self.cleaned_data['amount']
             available_discount = self.cleaned_data['discount']
             calculated_amount = Decimal('0.00')
+
+            self.fees_to_delete = []
+            self.fees_to_update = []
+            self.fee_lines = []
             for fee in self.fees:
                 month_amount = fee.amount
                 month_discount = Decimal('0.00')
@@ -70,17 +77,16 @@ class ReceiptForm(forms.ModelForm):
                 available_amount -= payment
                 calculated_amount += payment
 
+                # This fee_line may be discarded, we only append on two conditions
+                fee_line = FeeLine(lot=self.lot, date=fee.date, amount=payment, discount=month_discount)
                 if payment == month_amount:
                     self.fees_to_delete.append(fee)
-                    self.fee_lines.append(FeeLine(lot=self.lot, date=fee.date, amount=payment))
+                    self.fee_lines.append(fee_line)
                 elif not payment.is_zero():
-                    if not month_discount.is_zero():
-                        # this error string appears also on create_receipt.html
-                        raise ValidationError({'amount': _("Fees can't be paid partially when using a discount amount or rate.")})
-                    else:
-                        fee.amount = month_amount - payment
-                        self.fees_to_update.append(fee)
-                        self.fee_lines.append(FeeLine(lot=self.lot, date=fee.date, amount=payment))
+                    # we save a tuple containing fee and updated amount to avoid modifying fees that could be displayed
+                    # later on the view layer
+                    self.fees_to_update.append((fee, (month_amount - payment)))
+                    self.fee_lines.append(fee_line)
 
     def save(self, commit=True):
         pass
