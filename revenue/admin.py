@@ -41,6 +41,7 @@ class FeeLinesInline(admin.TabularInline):
 class ReceiptAdmin(admin.ModelAdmin):
     list_display = ['date', 'number', 'save_in_ledger', 'details_summary', 'contact', 'debit_account', 'credit_account', 'amount']
     list_filter = ['date', 'save_in_ledger']
+    list_select_related = ['contact', 'debit_account', 'credit_account']
     fields = ('date', 'contact', 'number', 'details', 'debit_account', 'credit_account', 'amount', 'save_in_ledger')
     inlines = [FeeLinesInline]
     search_fields = ['number', 'details']
