@@ -4,7 +4,9 @@ $(document).ready(function() {
         var amount = parse_decimal(this.value);
         var discount_rate = parse_decimal($('#id_discount_rate').val()).dividedBy(100);
         var discount = parse_decimal($('#id_discount').val());
-        this.value = amount.toFixed(2);
+        if (!amount.isZero()) {
+            this.value = amount.toFixed(2);
+        }
 
         // reset colors
         var rows = $('.fee-row');
@@ -48,8 +50,8 @@ $(document).ready(function() {
 
     $("#id_discount_rate").blur(function () {
         var discount_rate = parse_decimal(this.value);
-        this.value = discount_rate.toFixed(0);
         if (!discount_rate.isZero()) {
+            this.value = discount_rate.toFixed(0);
             $('#id_discount').val('');
         }
         $("#id_amount").blur();
@@ -57,8 +59,8 @@ $(document).ready(function() {
 
     $("#id_discount").blur(function () {
         var discount = parse_decimal(this.value);
-        this.value = discount.toFixed(2);
         if (!discount.isZero()) {
+            this.value = discount.toFixed(2);
             $('#id_discount_rate').val('');
         }
         $("#id_amount").blur();
