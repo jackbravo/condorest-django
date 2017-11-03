@@ -14,8 +14,8 @@ class AccountEntryForm(forms.Form):
     debit = forms.DecimalField(max_digits=13, decimal_places=2, required=False)
     credit = forms.DecimalField(max_digits=13, decimal_places=2, required=False)
 
-    def __init__(self, *args, **kwargs):
-        self.account = kwargs.pop('account', None)
+    def __init__(self, account, *args, **kwargs):
+        self.account = account
         super().__init__(*args, **kwargs)
         self.fields['transfer_to'].choices = self.account_choices()
 

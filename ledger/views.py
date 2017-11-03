@@ -71,6 +71,6 @@ class AccountArchiveView(MonthArchiveView):
         context['current_balance'] = context['previous_balance'] + (total_debit - total_credit)
 
         date = context['entry_list'].last().date if context['entry_list'] else datetime.now()
-        context['form'] = AccountEntryForm(account=self.account, initial={'date': date})
+        context['form'] = AccountEntryForm(self.account, initial={'date': date})
 
         return context
