@@ -75,7 +75,7 @@
         <!-- receips -->
         {% for receipt in receipts %}
         <div class="row">
-            <div class="col">{{ receipt.date|date:"Y-m-d" }}</div>
+            <div class="col">{{ receipt.date|date:"Y-m-d" }} <small>+{{ receipt.debit_account }} -{{ receipt.credit_account }}</small></div>
             <div class="col text-right"><small>{{ receipt.discount_str }}</small> <strong>{{ receipt.amount|intcomma }}</strong></div>
         </div>
         <div>{{ receipt.details|linebreaks }}</div>
