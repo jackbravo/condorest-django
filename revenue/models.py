@@ -23,6 +23,18 @@ class Receipt(IncomeExpenseNote):
         if self.discount and self.discount_rate:
             raise ValidationError(_('Use only discount amount or discount rate, not both.'))
 
+    def delete(self, using=None, keep_parents=False):
+        new_fees = []
+        for fee_line in self.feeline_set.all():
+            fee = Fee.objects.filter(lot=fee_line.lot, date=fee_line.date).first()
+            if fee:
+                fee.amount += fee_line.amount + fee_line.discount
+                fee.save()
+            else:
+                new_fees.append(Fee(date=fee_line.date, lot=fee_line.lot, amount=fee_line.amount + fee_line.discount))
+        Fee.objects.bulk_create(new_fees)
+        super().delete(using=None, keep_parents=keep_parents)
+
 
 class FeeLine(models.Model):
     receipt = models.ForeignKey(Receipt, on_delete=models.CASCADE)
