@@ -6,6 +6,7 @@ from django.views.generic import MonthArchiveView
 from django.db.models import Q, Sum
 
 from condorest.utils import dictfetchall
+from ledger.forms import AccountEntryForm
 from ledger.models import Account, Entry
 
 
@@ -68,5 +69,8 @@ class AccountArchiveView(MonthArchiveView):
         context['total_credit'] = total_credit
 
         context['current_balance'] = context['previous_balance'] + (total_debit - total_credit)
+
+        date = context['entry_list'].last().date if context['entry_list'] else datetime.now()
+        context['form'] = AccountEntryForm(account=self.account, initial={'date': date})
 
         return context
