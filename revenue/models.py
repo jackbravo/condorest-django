@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.template.defaultfilters import date
 from django.utils import timezone
+from humanize import intcomma
 
 from ledger.models import Entry, Account, IncomeExpenseNote
 from lots.models import Contact, Lot
@@ -34,6 +35,14 @@ class Receipt(IncomeExpenseNote):
                 new_fees.append(Fee(date=fee_line.date, lot=fee_line.lot, amount=fee_line.amount + fee_line.discount))
         Fee.objects.bulk_create(new_fees)
         super().delete(using=None, keep_parents=keep_parents)
+
+    def discount_str(self):
+        if self.discount:
+            return "-" + intcomma(self.discount)
+        elif self.discount_rate:
+            return self.discount_rate + "%"
+        else:
+            return ""
 
 
 class FeeLine(models.Model):

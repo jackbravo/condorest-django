@@ -76,7 +76,7 @@
         {% for receipt in receipts %}
         <div class="row">
             <div class="col">{{ receipt.date|date:"Y-m-d" }}</div>
-            <div class="col text-right"><strong>{{ receipt.amount|intcomma }}</strong></div>
+            <div class="col text-right"><small>{{ receipt.discount_str }}</small> <strong>{{ receipt.amount|intcomma }}</strong></div>
         </div>
         <div>{{ receipt.details|linebreaks }}</div>
         {% endfor %}
