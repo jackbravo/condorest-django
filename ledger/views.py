@@ -36,8 +36,18 @@ def index(request):
         cursor.execute(sql)
         data = dictfetchall(cursor)
 
+        previous_type = None
+        types_data = []
+        for row in data:
+            if previous_type != row['type']:
+                types_data.append({'name': row['type'], 'data':[], 'amount': Decimal('0.00')})
+                previous_type = row['type']
+            types_data[-1]['data'].append(row)
+            types_data[-1]['amount'] += row['amount']
+
+
         return render(request, 'ledger/index.html', context={
-            'data': data,
+            'data': types_data,
         })
 
 class AccountArchiveView(MonthArchiveView):
