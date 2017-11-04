@@ -32,6 +32,7 @@ After that just run `python manage.py migrate`.
 
 There is an example script that imports data from google spreadsheets using this sheets as a model:
 
+- [Contacts](https://docs.google.com/spreadsheets/d/1E1_ycmwKa420c04p9YeN-1W6dnJY8PcLwYs-NNSwO6k/edit?usp=sharing)
 - [Cash account](https://docs.google.com/spreadsheets/d/1yVpoOauNMssMKDWu-RB9HH9l_YOC9tBxhPXYWi_70Ls/edit#gid=1312790969)
 - [Fees](https://docs.google.com/spreadsheets/d/1lv2OYSm96-MZvUhL_nI63FjIzSch2K30MlUnYE9fv8s/edit#gid=833310425)
 
@@ -40,8 +41,11 @@ To set up access to this spreadsheets from python you can follow
 
 To import them you use the commands (in this order):
 
+    python manage.py google_import contacts
     python manage.py google_import cash_account
     python manage.py google_import fees
+    
+**Warning**. This commands delete previously entered entries, receipts, expense notes, fees and even contacts.
     
 ### Running
 
