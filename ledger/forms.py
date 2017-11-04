@@ -14,8 +14,8 @@ class AccountEntryForm(forms.Form):
     debit = forms.DecimalField(max_digits=13, decimal_places=2, required=False)
     credit = forms.DecimalField(max_digits=13, decimal_places=2, required=False)
 
-    def __init__(self, account, *args, **kwargs):
-        self.account = account
+    def __init__(self, *args, **kwargs):
+        self.account = kwargs.pop('account', None)
         super().__init__(*args, **kwargs)
         self.fields['transfer_to'].choices = self.account_choices()
 
@@ -33,3 +33,21 @@ class AccountEntryForm(forms.Form):
             choices[-1][-1].append((account.id, account.name))
 
         return choices
+
+    def clean(self):
+        if not self.cleaned_data['debit'] and not self.cleaned_data['credit']:
+            raise ValidationError(_("You need to provide either a debit or credit amount."))
+        if self.cleaned_data['debit'] and self.cleaned_data['credit']:
+            raise ValidationError(_("You can only provide either a debit or credit amount."))
+
+    def save(self):
+        entry = Entry(date=self.cleaned_data['date'], details=self.cleaned_data['details'])
+        if self.cleaned_data['debit']:
+            entry.debit_account = self.account
+            entry.credit_account_id = self.cleaned_data['transfer_to']
+            entry.amount = self.cleaned_data['debit']
+        else:
+            entry.debit_account_id = self.cleaned_data['transfer_to']
+            entry.credit_account = self.account
+            entry.amount = self.cleaned_data['credit']
+        entry.save()

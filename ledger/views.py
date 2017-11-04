@@ -1,9 +1,13 @@
 from datetime import datetime
 
 from decimal import Decimal
+
+from django.contrib import messages
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import MonthArchiveView
 from django.db.models import Q, Sum
+from django.utils.functional import cached_property
 
 from condorest.utils import dictfetchall
 from ledger.forms import AccountEntryForm
@@ -41,8 +45,11 @@ class AccountArchiveView(MonthArchiveView):
     month_format = '%m'
     template_name = 'ledger/account_archive.html'
 
+    @cached_property
+    def account(self):
+        return get_object_or_404(Account, name=self.kwargs['account'])
+
     def get_queryset(self):
-        self.account = get_object_or_404(Account, name=self.kwargs['account'])
         return Entry.objects.filter(Q(credit_account=self.account) | Q(debit_account=self.account))\
             .prefetch_related('credit_account')\
             .prefetch_related('debit_account')
@@ -70,7 +77,28 @@ class AccountArchiveView(MonthArchiveView):
 
         context['current_balance'] = context['previous_balance'] + (total_debit - total_credit)
 
-        date = context['entry_list'].last().date if context['entry_list'] else datetime.now()
-        context['form'] = AccountEntryForm(self.account, initial={'date': date})
+        initial = {
+            'date': context['entry_list'].last().date if context['entry_list'] else datetime.now(),
+        }
+        context['form'] = self.get_form(initial=initial)
 
         return context
+
+    def get_form(self, initial=None, data=None):
+        form = AccountEntryForm(account=self.account, initial=initial, data=data)
+        return form
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form(data=request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Entry created.')
+            return HttpResponseRedirect(request.get_full_path())
+
+        # mimic get method on BaseDateListView
+        self.date_list, self.object_list, extra_context = self.get_dated_items()
+        context = self.get_context_data(object_list=self.object_list,
+                                        date_list=self.date_list, **kwargs)
+        context.update(extra_context)
+        context['form'] = form
+        return self.render_to_response(context)
