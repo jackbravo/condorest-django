@@ -65,6 +65,4 @@ $(document).ready(function() {
         }
         $("#id_amount").blur();
     });
-
-    $('#id_date').datepicker({dateFormat: "yy-mm-dd"});
 });

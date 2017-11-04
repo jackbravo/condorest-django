@@ -15,6 +15,9 @@ $(document).ready(function() {
             .append( "<div>" + item.name + " <small>" + item.address + "</small><br>" + item.owner__name + "</div>" )
             .appendTo( ul );
     };
+
+    // Handle all #id_date inputs
+    $('#id_date').datepicker({dateFormat: "yy-mm-dd"});
 });
 
 function parse_decimal(str) {
