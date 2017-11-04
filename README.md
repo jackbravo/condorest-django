@@ -35,6 +35,9 @@ There is an example script that imports data from google spreadsheets using this
 - [Cash account](https://docs.google.com/spreadsheets/d/1yVpoOauNMssMKDWu-RB9HH9l_YOC9tBxhPXYWi_70Ls/edit#gid=1312790969)
 - [Fees](https://docs.google.com/spreadsheets/d/1lv2OYSm96-MZvUhL_nI63FjIzSch2K30MlUnYE9fv8s/edit#gid=833310425)
 
+To set up access to this spreadsheets from python you can follow
+[this tutorial](https://www.twilio.com/blog/2017/02/an-easy-way-to-read-and-write-to-a-google-spreadsheet-in-python.html).
+
 To import them you use the commands (in this order):
 
     python manage.py google_import cash_account
