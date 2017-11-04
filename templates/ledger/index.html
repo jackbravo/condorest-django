@@ -15,7 +15,7 @@
         <tbody>
         {% for row in data %}
             <tr>
-                <td><a href="{% url 'ledger:account-archive' row.name '2016' '05' %}">{{ row.name }}</a></td>
+                <td><a href="{% url 'ledger:account-archive' row.name row.date|date:"Y" row.date|date:"m" %}">{{ row.name }}</a></td>
                 <td class="text-right">{{ row.amount|intcomma }}</td>
                 <td>{{ row.type }}</td>
             </tr>

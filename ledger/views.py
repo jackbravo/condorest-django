@@ -18,13 +18,13 @@ def index(request):
     from django.db import connection
 
     with connection.cursor() as cursor:
-        sql = '''SELECT id, name, SUM(amount) amount, type FROM (
-            SELECT a.id, name, SUM(amount) amount, type
+        sql = '''SELECT id, name, MAX(date) date, SUM(amount) amount, type FROM (
+            SELECT a.id, name, MAX(date) date, SUM(amount) amount, type
             FROM ledger_entry e
             INNER JOIN ledger_account a ON e.debit_account_id = a.id
             GROUP BY a.id, name
             UNION ALL
-            SELECT a.id, name, -SUM(amount) amount, type
+            SELECT a.id, name, MAX(date) date, -SUM(amount) amount, type
             FROM ledger_entry e
             INNER JOIN ledger_account a ON e.credit_account_id = a.id
             GROUP BY a.id, name
@@ -44,6 +44,7 @@ class AccountArchiveView(MonthArchiveView):
     date_field = 'date'
     month_format = '%m'
     template_name = 'ledger/account_archive.html'
+    allow_future = True
 
     @cached_property
     def account(self):
