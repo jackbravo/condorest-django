@@ -118,6 +118,8 @@ class Command(BaseCommand):
             ids_dict = dict(list(Receipt.objects.filter(number__in=receipt_numbers).values_list('number', 'id')))
             ids_dict.update(receipts_below_min)
             for feeline in feeline_list:
+                # If you get an error here... it is because the key should have been imported in cash_accounts but
+                # wasn't, so you need to check your cash spreadsheets to see why that receipt number was skipped.
                 if hasattr(feeline, 'receipt_number'): feeline.receipt_id = ids_dict[feeline.receipt_number]
                 else: feeline.receipt_id = year_receipt.id
             FeeLine.objects.bulk_create(feeline_list)
