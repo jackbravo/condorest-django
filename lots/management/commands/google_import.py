@@ -130,8 +130,9 @@ class Command(BaseCommand):
         Entry.objects.all().delete()
         Receipt.objects.all().delete()
         ExpenseNote.objects.all().delete()
+        Account.objects.filter(id__gt=7).delete()
 
-        sheets = ('may-16', 'jun-16', 'jul-16', 'ago-16', 'sep-16', 'oct-16', 'nov-16', 'dic-16', 'ene-17', 'feb-17', 'Mar-17', 'Abr-17', 'May-17', 'Jun-17', 'Jul-17', 'Ago-17', 'Sep-17', 'Oct-17')
+        sheets = ('may-16', 'jun-16', 'jul-16', 'ago-16', 'sep-16', 'oct-16', 'nov-16', 'dic-16', 'ene-17', 'feb-17', 'Mar-17', 'Abr-17', 'May-17', 'Jun-17', 'Jul-17', 'Ago-17', 'Sep-17', 'Oct-17', 'Nov-17')
 
         Entry(details='Saldo inicial',
               amount=Decimal('5110.62'),
@@ -149,9 +150,9 @@ class Command(BaseCommand):
         print("Finished importing cash_account")
 
     def _import_cash_account_records(self, records):
-        administrative = Account.objects.get(name='Administrative')
         cash = Account.objects.get(name='Cash')
         bank = Account.objects.get(name='Bank')
+        administrative = Account.objects.get(name='Administrative')
 
         income = Decimal('0.00')
         expense = Decimal('0.00')
@@ -167,9 +168,19 @@ class Command(BaseCommand):
                 egreso = self.parse_decimal(row['Egreso'])
                 if ingreso == income and egreso == expense:
                     break
+                else:
+                    print('Should not have both columns filled', row)
+                    print('income', income, ingreso)
+                    print('expense', expense, egreso)
+                    raise Exception('Income and expense warning')
             if row['Ingreso'] != '':
                 amount = self.parse_decimal(row['Ingreso'])
                 if row['Folio']:
+                    if row['Concepto'] == 'Cancelado':
+                        details = row['Concepto']
+                    else:
+                        details = '''%(Cuotas)s
+                        Lote: %(Clave)s, Cuotas: Nombre: %(Nombre)s''' % row
                     item, created = Receipt.objects.get_or_create(
                         number=row['Folio'],
                         defaults={
@@ -178,8 +189,7 @@ class Command(BaseCommand):
                             'date': current_date,
                             'debit_account': cash,
                             'contact': owner,
-                            'details': '''Lote: %(Clave)s, Cuotas: %(Cuotas)s
-                            Nombre: %(Nombre)s''' % row,
+                            'details': details,
                         }
                     )
                     if not created:
@@ -198,17 +208,48 @@ class Command(BaseCommand):
                 income += amount
             elif row['Egreso'] != '':
                 amount = self.parse_decimal(row['Egreso'])
+                details = str(row['Nombre'])
+                details += "\n" + str(row['Concepto']) if row['Concepto'] else ""
+                if row['Cuotas']:
+                    debit_account, created = Account.objects.get_or_create(
+                        name=row['Cuotas'], defaults={
+                            'name': row['Cuotas'],
+                            'type': 'expense',
+                        })
+                else:
+                    debit_account = administrative
                 item = ExpenseNote(
                     number=row['Folio'],
                     amount=amount,
                     credit_account=cash,
-                    debit_account=administrative,
+                    debit_account=debit_account,
                     date=current_date,
-                    details=row['Concepto'],
+                    details=details,
                 )
                 item.save()
                 expense += amount
-            elif row['Banco'] != '' and row['Folio'] != '':
+            elif row['Banco'] != '' and row['Clave'] == '':
+                amount = self.parse_decimal(row['Banco'])
+                details = str(row['Nombre'])
+                details += "\n" + str(row['Concepto']) if row['Concepto'] else ""
+                if row['Cuotas']:
+                    debit_account, created = Account.objects.get_or_create(
+                        name=row['Cuotas'], defaults={
+                            'name': row['Cuotas'],
+                            'type': 'expense',
+                        })
+                else:
+                    debit_account = administrative
+                item = ExpenseNote(
+                    number=row['Folio'],
+                    amount=amount,
+                    credit_account=bank,
+                    debit_account=debit_account,
+                    date=current_date,
+                    details=details,
+                )
+                item.save()
+            elif row['Banco'] != '' and row['Clave'] != '':
                 amount = self.parse_decimal(row['Banco'])
                 item, created = Receipt.objects.get_or_create(
                     number=row['Folio'],
