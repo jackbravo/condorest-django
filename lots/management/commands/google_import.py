@@ -50,7 +50,18 @@ class Command(BaseCommand):
             #handle.close()
             self._import_fees_records(year, records)
 
+        self.fill_empty_receipt_amounts()
+
         print("Finished importing fees")
+
+    def fill_empty_receipt_amounts(self):
+        from django.db import connection
+        with connection.cursor() as cursor:
+            sql = '''UPDATE revenue_receipt r
+              SET amount = COALESCE((SELECT SUM(amount) FROM revenue_feeline f WHERE receipt_id = r.id), 0.00)
+              WHERE r.amount = 0.00
+            '''
+            cursor.execute(sql)
 
     def _import_fees_records(self, year, records):
         months = 12 if year != 2009 else 7
