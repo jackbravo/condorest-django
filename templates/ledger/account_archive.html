@@ -63,10 +63,10 @@
 
 <p>
     {% if previous_month %}
-        Previous Month: <a href="{% url 'ledger:account-archive' account.name previous_month.year previous_month.month %}">{{ previous_month|date:"F Y" }}</a>
+        Previous Month: <a href="{% url 'ledger:account-archive' account.id previous_month.year previous_month.month %}">{{ previous_month|date:"F Y" }}</a>
     {% endif %}
     {% if next_month %}
-        Next Month: <a href="{% url 'ledger:account-archive' account.name next_month.year next_month.month %}">{{ next_month|date:"F Y" }}</a>
+        Next Month: <a href="{% url 'ledger:account-archive' account.id next_month.year next_month.month %}">{{ next_month|date:"F Y" }}</a>
     {% endif %}
 </p>
 {% endblock %}

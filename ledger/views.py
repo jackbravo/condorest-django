@@ -58,7 +58,7 @@ class AccountArchiveView(MonthArchiveView):
 
     @cached_property
     def account(self):
-        return get_object_or_404(Account, name=self.kwargs['account'])
+        return get_object_or_404(Account, id=self.kwargs['account'])
 
     def get_queryset(self):
         return Entry.objects.filter(Q(credit_account=self.account) | Q(debit_account=self.account))\
