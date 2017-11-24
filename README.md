@@ -25,7 +25,9 @@ We keep track of requirements using requirements.txt file, you can install them 
 
 ### Installing
 
-You need to create a database for the project and make sure your credentials are correct on `condorest/settings.py`.
+Create your local `.env` file based on the template file `local.env`.
+
+You need to create a database for the project and make sure your credentials are correct on the file `.env`.
 After that just run `python manage.py migrate`.
 
 ### Importing data
