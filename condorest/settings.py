@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+import environ
+
+root = environ.Path(__file__) - 2 # three folder back (/a/b/c/ - 3 = /)
+env = environ.Env()
+environ.Env.read_env(root() + '/.env')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,10 +25,10 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'l@9h+3fgf2rf=sgc83lfp*mz74eo*tu0hzg0tm0m&=zu)dmupz'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG', default=False)
 
 ALLOWED_HOSTS = []
 
@@ -91,16 +96,9 @@ WSGI_APPLICATION = 'condorest.wsgi.application'
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'condopy',
-        'USER': 'condopy',
-        'PASSWORD': 'condopy',
-        'HOST': 'localhost',
-        'PORT': '5432',
-        'ATOMIC_REQUESTS': True,
-    }
+    'default': env.db()
 }
+DATABASES['default']['ATOMIC_REQUESTS'] = True
 
 
 # Password validation
