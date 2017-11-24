@@ -19,7 +19,7 @@ from django.contrib import admin
 from condorest import settings
 
 urlpatterns = [
-    url(r'^ledger/', include('ledger.urls', namespace='ledger')),
+    url(r'^', include('ledger.urls', namespace='ledger')),
     url(r'^lots/', include('lots.urls', namespace='lots')),
     url(r'^revenue/', include('revenue.urls', namespace='revenue')),
     url(r'^select2/', include('django_select2.urls')),
