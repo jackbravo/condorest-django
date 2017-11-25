@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.template.defaultfilters import date
 from django.utils import timezone
-from humanize import intcomma
+from django.contrib.humanize.templatetags.humanize import intcomma
 
 from ledger.models import Entry, Account, IncomeExpenseNote
 from lots.models import Contact, Lot

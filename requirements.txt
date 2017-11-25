@@ -1,6 +1,9 @@
 django-bootstrap4
 django-environ
+django-extensions
 django-import-export
 django-debug-toolbar
 django_select2
+gspread
+oauth2client
 psycopg2
