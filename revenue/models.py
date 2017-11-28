@@ -17,8 +17,8 @@ class Receipt(IncomeExpenseNote):
         related_name='receipt_credit_accounts',
         default=3 # lambda: Account.objects.get(name='Fees')
     )
-    discount = models.DecimalField(blank=True, max_digits=13, decimal_places=2)
-    discount_rate = models.IntegerField(blank=True)
+    discount = models.DecimalField(null=True, blank=True, max_digits=13, decimal_places=2)
+    discount_rate = models.IntegerField(null=True, blank=True)
 
     def clean(self):
         if self.discount and self.discount_rate:

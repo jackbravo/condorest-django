@@ -67,7 +67,7 @@ class Entry(models.Model):
 class IncomeExpenseNote(models.Model):
     date = models.DateField(db_index=True, default=timezone.now)
     number = models.CharField(max_length=254, null=True, blank=True, db_index=True)
-    details = models.CharField(max_length=254, blank=True)
+    details = models.CharField(max_length=254, null=True, blank=True)
     amount = models.DecimalField(max_digits=13, decimal_places=2)
     contact = models.ForeignKey(Contact, on_delete=models.PROTECT, null=True, blank=True)
     save_in_ledger = models.BooleanField(blank=True, default=True)
