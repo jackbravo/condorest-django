@@ -3,6 +3,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import MonthArchiveView
@@ -10,10 +11,12 @@ from django.db.models import Q, Sum
 from django.utils.functional import cached_property
 
 from condorest.utils import dictfetchall
+from condorest.views import StaffRequiredMixin
 from ledger.forms import AccountEntryForm
 from ledger.models import Account, Entry
 
 
+@staff_member_required
 def index(request):
     from django.db import connection
 
@@ -50,7 +53,7 @@ def index(request):
             'data': types_data,
         })
 
-class AccountArchiveView(MonthArchiveView):
+class AccountArchiveView(StaffRequiredMixin, MonthArchiveView):
     date_field = 'date'
     month_format = '%m'
     template_name = 'ledger/account_archive.html'

@@ -3,6 +3,7 @@ from datetime import datetime
 from decimal import Decimal
 
 from django.contrib import messages
+from django.contrib.admin.views.decorators import staff_member_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 
@@ -11,6 +12,7 @@ from revenue.forms import ReceiptForm
 from revenue.models import Receipt, Fee
 
 
+@staff_member_required
 def index(request):
     from django.db import connection
 
@@ -54,6 +56,7 @@ def index(request):
             'data': data,
         })
 
+@staff_member_required
 def create_receipt(request, lot):
     lot = get_object_or_404(Lot, name=lot)
     receipts = Receipt.objects.filter(contact=lot.owner).order_by('-date', '-id').select_related('credit_account', 'debit_account')
