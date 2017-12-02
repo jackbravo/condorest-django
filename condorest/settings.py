@@ -14,7 +14,10 @@ import os
 import environ
 
 root = environ.Path(__file__) - 2 # three folder back (/a/b/c/ - 3 = /)
-env = environ.Env()
+env = environ.Env(
+    DEBUG=(bool, False),
+    ALLOWED_HOSTS=(list, []),
+)
 environ.Env.read_env(root() + '/.env')
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -28,9 +31,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env('DEBUG', default=False)
+DEBUG = env('DEBUG')
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = env('ALLOWED_HOSTS')
 
 
 # Application definition
