@@ -7,7 +7,7 @@ It has the following modules:
 
 ### Prerequisites
 
-This project uses Python 3 and Postgres 9+.
+This project uses Python 3 and Postgres 9+ with tablefunc EXTENSION installed.
 
 It is recommendable to install using a virtual environment. If you enjoy using fish shell you can use
 [virtual fish](http://virtualfish.readthedocs.io/en/latest/). And then do:
@@ -36,8 +36,17 @@ the condorest virtualenv before running this commands:
 
 Create your local `.env` file based on the template file `local.env`.
 
+Create a database and user on your postgres server. For example running this commands:
+
+    createuser -Psd condorest
+    createdb -O condorest condorest
+
 You need to create a database for the project and make sure your credentials are correct on the file `.env`.
 After that just run `python manage.py migrate`.
+
+To install the `tablefunc` postgres extension run this on your postgres database:
+
+    CREATE EXTENSION tablefunc;
 
 ### Importing data
 
