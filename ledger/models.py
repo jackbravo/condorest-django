@@ -71,8 +71,8 @@ class IncomeExpenseNote(models.Model):
     amount = models.DecimalField(max_digits=13, decimal_places=2)
     contact = models.ForeignKey(Contact, on_delete=models.PROTECT, null=True, blank=True)
     save_in_ledger = models.BooleanField(blank=True, default=True)
-    debit_account = models.ForeignKey(Account, related_name='debit_accounts')
-    credit_account = models.ForeignKey(Account, related_name='credit_accounts')
+    debit_account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='debit_accounts')
+    credit_account = models.ForeignKey(Account, on_delete=models.CASCADE, related_name='credit_accounts')
     entry = models.OneToOneField(Entry, on_delete=models.SET_NULL, null=True, blank=True)
 
     created = models.DateTimeField(auto_now_add=True)

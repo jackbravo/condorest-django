@@ -19,9 +19,9 @@ from django.contrib import admin
 from condorest import settings
 
 urlpatterns = [
-    url(r'^', include('ledger.urls', namespace='ledger')),
-    url(r'^lots/', include('lots.urls', namespace='lots')),
-    url(r'^revenue/', include('revenue.urls', namespace='revenue')),
+    url(r'^', include('ledger.urls')),
+    url(r'^lots/', include('lots.urls')),
+    url(r'^revenue/', include('revenue.urls')),
     url(r'^select2/', include('django_select2.urls')),
     url(r'^admin/', admin.site.urls),
 ]
