@@ -41,9 +41,12 @@ Then you should be able to do:
 
 This will install a virtual environment with several different Python packages that will be used on this specific project, independent of others virtual environments that may be used in other projects. Since the virtual environments are stored on a hidden folder inside your home folder, it doesn't matter where you run this specific command.
 
-Continue with the following commands, inside your project folder:
+Go to your project folder:
 
     cd condorest-django
+
+Then continue with the following commands:
+
     vf activate condorest
     vf connect # to use the auto-activation plugin
     # http://virtualfish.readthedocs.io/en/latest/plugins.html#auto-activation
