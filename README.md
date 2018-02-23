@@ -9,6 +9,12 @@ It has the following modules:
 
 This project uses Python 3 and Postgres 9+ with tablefunc EXTENSION installed.
 
+To install Python 3:
+    sudo apt-get install python3
+
+To install PostgreSQL:
+    sudo apt-get install postgresql
+
 It is recommendable to install using a virtual environment. If you enjoy using fish shell you can use
 [virtual fish](http://virtualfish.readthedocs.io/en/latest/). BUT, since we're using python3 these instructions won't work.
 
