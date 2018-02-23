@@ -76,9 +76,11 @@ Then run the following commands, inside your project folder:
 
 ### Installing
 
-Create your local `.env` file based on the template file `local.env`, by running this command and then **modify** the `SECRET_KEY` with a random string of more than 16 chars:
+Create your local `.env` file based on the template file `local.env`, by running this command:
 
     cp local.env .env
+
+And **then modify** the `SECRET_KEY` with a random string of more than 16 chars, this variable is inside your newly created `.env` file. 
 
 Create a database and user on your postgres server. For example running this commands (if using ubuntu append `sudo -u postgres` to both commands):
 
