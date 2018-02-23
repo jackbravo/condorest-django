@@ -14,9 +14,13 @@ It is recommendable to install using a virtual environment. If you enjoy using f
 
 Install virtualfish by running:
 
-    pip3 pip3 install virtualfish
+    pip3 install virtualfish
 
- And then do:
+Add the following to your `~/.config/fish/config.fish`:
+
+    eval (python3 -m virtualfish compat_aliases auto_activation)
+
+And then do:
 
     vf new condorest
     cd condorest
