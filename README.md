@@ -68,7 +68,7 @@ the condorest virtualenv before running this commands, this should happen automa
 
 Then run the following commands, inside your project folder:
 
-    git clone https://github.com/clearspark/django-monthfield.git
+    git clone https://github.com/clearspark/django-monthfield.git #this package is not managed by pip, that is why has to be installed this way
     cd django-monthfield
     python setup.py install
     cd ..
