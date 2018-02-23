@@ -82,7 +82,9 @@ Create your local `.env` file based on the template file `local.env`, by running
 
 And then **modify** the `SECRET_KEY` with a random string of more than 16 chars. This variable is inside your newly created `.env` file, you should open it and change its value.
 
-Create a database and user on your postgres server. For example running this commands (if using ubuntu append `sudo -u postgres` to both commands):
+Create a database and user on your postgres server. For example running this commands. 
+
+If using ubuntu append `sudo -u postgres` to both commands:
 
     createuser -Psd condorest
     createdb -O condorest condorest
