@@ -74,7 +74,7 @@ the condorest virtualenv before running this commands:
 
 Create your local `.env` file based on the template file `local.env`.
 
-Create a database and user on your postgres server. For example running this commands:
+Create a database and user on your postgres server. For example running this commands (if using ubuntu append `sudo -u postgres` to both commands):
 
     createuser -Psd condorest
     createdb -O condorest condorest
