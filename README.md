@@ -11,9 +11,10 @@ This project uses Python 3 and Postgres 9+ with tablefunc EXTENSION installed.
 
 To install Python 3:
 
-    sudo apt-get install python3
+    sudo apt-get install python3 // in ubuntu
+    brew install python3 // in macos
 
-To install PostgreSQL:
+To install PostgreSQL in Mac you can use [PostgresAPP](https://postgresapp.com/). In ubuntu:
 
     sudo apt-get install postgresql
 
