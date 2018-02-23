@@ -26,7 +26,7 @@ Add the following to your `~/.config/fish/config.fish`:
 
     eval (python3 -m virtualfish compat_aliases auto_activation)
 
-And then do:
+After closing and opening your console you should be able to do:
 
     vf new condorest
     cd condorest
