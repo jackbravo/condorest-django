@@ -82,12 +82,16 @@ Create your local `.env` file based on the template file `local.env`, by running
 
 And then **modify** the `SECRET_KEY` with a random string of more than 16 chars. This variable is inside your newly created `.env` file, you should open it and change its value.
 
-Create a database and user on your postgres server. For example running this commands. 
-
-If using ubuntu append `sudo -u postgres` to both commands:
+Create a database and user on your postgres server, running these commands: 
 
     createuser -Psd condorest
     createdb -O condorest condorest
+
+**If using Ubuntu the commands should be**:
+
+    sudo -u postgres createuser -Psd condorest
+    sudo -u postgres createdb -O condorest condorest
+
 
 You need to create a database for the project and make sure your credentials are correct on the file `.env`.
 After that just run `python manage.py migrate`.
