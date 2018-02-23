@@ -82,19 +82,20 @@ Create your local `.env` file based on the template file `local.env`, by running
 
 And then **modify** the `SECRET_KEY` with a random string of more than 16 chars. This variable is inside your newly created `.env` file, you should open it and change its value.
 
-Create a database and user on your postgres server, running these commands: 
-
-    createuser -Psd condorest
-    createdb -O condorest condorest
+You need to create a database for the project and make sure your credentials are correct on the file `.env`. Create a database and user on your postgres server, running these commands: 
 
 **If using Ubuntu the commands should be**:
 
     sudo -u postgres createuser -Psd condorest
     sudo -u postgres createdb -O condorest condorest
 
-(If trouble arises regarding the commands, you can access postgres by typing `psql`, then you can drop a given table by typing `drop database condorest;`, then typing `drop user condores;` to delete the created user, and **then** typing `\q` to actually quit the psql command line, this is similar to typing `exit` in the good old regular mysql.)
+On other OS the commands are:
 
-You need to create a database for the project and make sure your credentials are correct on the file `.env`.
+    createuser -Psd condorest
+    createdb -O condorest condorest
+
+If trouble arises regarding these commands (forgetting to use sudo on Ubuntu, etc), you can access postgres by typing `psql`, then you can drop a given table by typing `drop database condorest;`, then typing `drop user condores;` to delete the created user, and **then** typing `\q` to actually quit the psql command line, this is similar to typing `exit` in the good old regular mysql.
+
 After that just run 
 
     python manage.py migrate
