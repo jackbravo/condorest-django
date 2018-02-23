@@ -10,7 +10,13 @@ It has the following modules:
 This project uses Python 3 and Postgres 9+ with tablefunc EXTENSION installed.
 
 It is recommendable to install using a virtual environment. If you enjoy using fish shell you can use
-[virtual fish](http://virtualfish.readthedocs.io/en/latest/). And then do:
+[virtual fish](http://virtualfish.readthedocs.io/en/latest/). BUT, since we're using python3 these instructions won't work.
+
+Install virtualfish by running:
+
+    pip3 pip3 install virtualfish
+
+ And then do:
 
     vf new condorest
     cd condorest
