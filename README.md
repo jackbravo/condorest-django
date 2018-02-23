@@ -92,6 +92,7 @@ Create a database and user on your postgres server, running these commands:
     sudo -u postgres createuser -Psd condorest
     sudo -u postgres createdb -O condorest condorest
 
+(If trouble arises regarding the commands, you can access postgres by typing `psql`, then you can drop a given table by typing `drop database condorest;`, then typing `drop user condores;` to delete the created user, and **then** typing `\q` to actually quit the psql command line, this is similar to typing `exit` in the good old regular mysql.)
 
 You need to create a database for the project and make sure your credentials are correct on the file `.env`.
 After that just run `python manage.py migrate`.
