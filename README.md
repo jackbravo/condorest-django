@@ -32,6 +32,7 @@ Add the following to your `~/.config/fish/config.fish`:
 After closing and opening your console you will need to switch to fish shell, most likely you would be using regular bash by default.
 
 Change to fish by running:
+
     fish
 
 Then you should be able to do:
