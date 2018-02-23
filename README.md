@@ -96,7 +96,7 @@ Create a database and user on your postgres server, running these commands:
 You need to create a database for the project and make sure your credentials are correct on the file `.env`.
 After that just run `python manage.py migrate`.
 
-To install the `tablefunc` postgres extension run this on your postgres database:
+To install the `tablefunc` postgres extension run this on your postgres database. To run the command you can enter the postgres shell with `python manage.py dbshell`:
 
     CREATE EXTENSION tablefunc;
 
