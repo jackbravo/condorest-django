@@ -66,7 +66,7 @@ We keep track of requirements using requirements.txt file, you can install them 
 We use also a non pip installable extension called django-monthfield. To install, make sure you are using
 the condorest virtualenv before running this commands, this should happen automatically since you're already on your project folder and you have followed the previous commands.
 
-Then run the following commands:
+Then run the following commands, inside your project folder:
 
     git clone https://github.com/clearspark/django-monthfield.git
     cd django-monthfield
