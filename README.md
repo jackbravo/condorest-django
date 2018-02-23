@@ -41,7 +41,7 @@ Then you should be able to do:
 
 This will install a virtual environment with several different Python packages that will be used on this specific project, independent of others virtual environments that may be used in other projects. Since the virtual environments are stored on a hidden folder inside your home folder, it doesn't matter where you run this specific command.
 
-Go to your project folder:
+Go to your project folder, if not currently on it:
 
     cd condorest-django
 
