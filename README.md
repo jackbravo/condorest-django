@@ -59,7 +59,9 @@ Then continue with the following commands:
 
 vf connect uses the auto-activation plugin, this means that the next time you get to your project folder the version of python initially configured (in this case python3) will be used everytime from now on.
 
-We keep track of requirements using requirements.txt file, you can install them using `pip install -r requirements.txt`.
+We keep track of requirements using requirements.txt file, you can install them using
+
+    pip install -r requirements.txt
 
 We use also a non pip installable extension called django-monthfield. To install, make sure you are using
 the condorest virtualenv before running this commands:
