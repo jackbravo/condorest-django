@@ -38,7 +38,8 @@ Change to fish by running:
 Then you should be able to do:
 
     vf new condorest
-	This will install a virtual environment with several different Python packages that will be used on this specific project, independent of others virtual environments that may be used in other projects.
+This will install a virtual environment with several different Python packages that will be used on this specific project, independent of others virtual environments that may be used in other projects.
+
 
     cd condorest
     vf activate condorest
