@@ -50,9 +50,12 @@ Then continue with the following commands:
     vf activate condorest
     vf connect # to use the auto-activation plugin
     # http://virtualfish.readthedocs.io/en/latest/plugins.html#auto-activation
+    python --version # this should give you python 3
     cd ..
     vf deactivate
+    python --version # this should give you python 2
     cd condorest-django # condorest env is now auto activated ;-)
+    python --version # this should give you python 3 because of the autoactivation
 
 We keep track of requirements using requirements.txt file, you can install them using `pip install -r requirements.txt`.
 
