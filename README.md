@@ -38,17 +38,18 @@ Change to fish by running:
 Then you should be able to do:
 
     vf new condorest
+
 This will install a virtual environment with several different Python packages that will be used on this specific project, independent of others virtual environments that may be used in other projects. Since the virtual environments are stored on a hidden folder inside your home folder, it doesn't matter where you run this specific command.
 
 Continue with the following commands, inside your project folder:
 
-    cd condorest
+    cd condorest-django
     vf activate condorest
     vf connect # to use the auto-activation plugin
     # http://virtualfish.readthedocs.io/en/latest/plugins.html#auto-activation
     cd ..
-    cd deactivate
-    cd condorest # condorest env is now auto activated ;-)
+    vf deactivate
+    cd condorest-django # condorest env is now auto activated ;-)
 
 We keep track of requirements using requirements.txt file, you can install them using `pip install -r requirements.txt`.
 
