@@ -57,7 +57,7 @@ Then continue with the following commands:
     cd condorest-django # condorest env is now auto activated ;-)
     python --version # this should give you python 3 because of the autoactivation
 
-vf connect use the auto-activation plugin, this means that the next time you get to your project folder the version of python initially configured (in this case python3) will be used everytime from now on.
+vf connect uses the auto-activation plugin, this means that the next time you get to your project folder the version of python initially configured (in this case python3) will be used everytime from now on.
 
 We keep track of requirements using requirements.txt file, you can install them using `pip install -r requirements.txt`.
 
