@@ -76,7 +76,7 @@ Then run the following commands, inside your project folder:
 
 ### Installing
 
-Create your local `.env` file based on the template file `local.env`, by running this command: 
+Create your local `.env` file based on the template file `local.env`, by running this command and then **modify the SECRET_KEY**:
 
     cp local.env .env
 
