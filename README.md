@@ -125,7 +125,9 @@ To import them you use the commands (in this order):
     
 ### Running
 
-Done, now you can test the site using `python manage.py runserver`
+Create a user for your project `python manage.py createsuperuser`.
+
+Done, now you can test the site using `python manage.py runserver`.
 
 ## Projects
 
